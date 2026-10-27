@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RNFF Week 5 Report</title>
+<style>
+  :root {
+    --bg-main: #0b0e14;
+    --card-bg: #151922;
+    --card-border: #262c3a;
+    --accent-red: #c8102e;
+    --accent-gold: #f59e0b;
+    --win-green: #10b981;
+    --loss-red: #ef4444;
+    --text-primary: #f3f4f6;
+    --text-secondary: #9ca3af;
+    --text-muted: #6b7280;
+  }
+
+  body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 860px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .header-card {
+    background: linear-gradient(135deg, #1f2430 0%, #11141c 100%);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 100%;
+    background-color: var(--accent-red);
+  }
+
+  .league-tag {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent-gold);
+    margin-bottom: 4px;
+  }
+
+  h1 {
+    font-size: 1.75rem;
+    font-weight: 800;
+    margin: 0 0 12px 0;
+    letter-spacing: -0.02em;
+  }
+
+  .editorial-note {
+    background: rgba(200, 16, 46, 0.08);
+    border-left: 3px solid var(--accent-red);
+    padding: 12px 14px;
+    border-radius: 0 6px 6px 0;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: #e5e7eb;
+  }
+
+  .editorial-note strong {
+    color: #fff;
+  }
+
+  .section-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 8px 0 0 0;
+  }
+
+  .matchup-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .scoreboard {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.02);
+    border-bottom: 1px solid var(--card-border);
+    padding: 14px 18px;
+  }
+
+  .team-side {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .team-side.winner {
+    text-align: left;
+  }
+
+  .team-side.loser {
+    text-align: right;
+  }
+
+  .team-name {
+    font-size: 1rem;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .manager-name {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  .team-score {
+    font-size: 1.35rem;
+    font-weight: 800;
+    margin-top: 2px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .team-side.winner .team-score {
+    color: var(--win-green);
+  }
+
+  .team-side.loser .team-score {
+    color: var(--loss-red);
+  }
+
+  .vs-badge {
+    padding: 0 12px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+
+  .analysis-section {
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 0.85rem;
+    line-height: 1.45;
+  }
+
+  .winner-breakdown {
+    color: #d1d5db;
+    border-left: 2px solid var(--win-green);
+    padding-left: 10px;
+  }
+
+  .loser-roast {
+    color: #fca5a5;
+    background: rgba(239, 68, 68, 0.05);
+    border-left: 2px solid var(--loss-red);
+    padding: 8px 10px;
+    border-radius: 0 4px 4px 0;
+  }
+
+  .tag {
+    display: inline-block;
+    font-weight: 700;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-right: 4px;
+  }
+
+  .tag-win {
+    color: var(--win-green);
+  }
+
+  .tag-roast {
+    color: var(--loss-red);
+  }
+
+  .table-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.82rem;
+  }
+
+  th {
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text-secondary);
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--card-border);
+  }
+
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    color: var(--text-secondary);
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  .col-rank {
+    font-weight: 700;
+    width: 24px;
+    color: var(--text-muted);
+  }
+
+  .col-team {
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .col-rec {
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  .badge-undefeated {
+    color: var(--accent-gold);
+    font-weight: 800;
+  }
+
+  .badge-winless {
+    color: var(--loss-red);
+    font-weight: 800;
+  }
+
+  .highlight-opt-winner {
+    color: var(--win-green);
+    font-weight: 700;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header Card -->
+  <div class="header-card">
+    <div class="league-tag">RN Fantasy Football League &bull; Week 5</div>
+    <h1>Week 5 Matchup Recap &amp; Roast Report</h1>
+    <div class="editorial-note">
+      <strong>The Week 5 Separation:</strong> October fantasy football is where pretenders run out of runway. Week 5 delivered wild extremes: Jaylen Warren seizing Pittsburgh’s backfield with Rico Dowdle banged up, Drake Maye going scorched earth with five total touchdowns in Las Vegas, and Parker Washington emerging as a legitimate high-volume target earner. Meanwhile, managers who stubbornly locked in broken offenses, ignored defensive matchups, or rolled out compromised starters found out how fast a 50-point floor caves in.
+    </div>
+  </div>
+
+  <div class="section-title">Matchup Breakdowns</div>
+
+  <!-- Matchup 1: Offensive Clinic -->
+  <div class="matchup-card">
+    <div class="scoreboard">
+      <div class="team-side winner">
+        <span class="team-name">Coach $howtime</span>
+        <span class="manager-name">Samuel</span>
+        <span class="team-score">198.3</span>
+      </div>
+      <div class="vs-badge">def</div>
+      <div class="team-side loser">
+        <span class="team-name">ACHANE Gang</span>
+        <span class="manager-name">Freddy</span>
+        <span class="team-score">109.5</span>
+      </div>
+    </div>
+    <div class="analysis-section">
+      <div class="winner-breakdown">
+        <span class="tag tag-win">Victor</span> Samuel hung a league-record 198.3 points[cite: 3]. Jaylen Warren seized Pittsburgh’s backfield for 33.8[cite: 3], Matthew Stafford tossed lasers for 26.0[cite: 3], George Pickens cooked for 23.5[cite: 3], James Cook bullied Buffalo’s front for 22.3[cite: 3], and the Broncos D/ST added 22.0[cite: 3]. Spencer Shrader even dropped 21.0 kicking points to cap off a 100% optimal lineup performance[cite: 3].
+      </div>
+      <div class="loser-roast">
+        <span class="tag tag-roast">The Field Goal Charity (Freddy)</span> Freddy’s 166-point Week 4 explosion collapsed directly into a dumpster fire. CeeDee Lamb vanished for 1.9 points[cite: 3], Harold Fannin brought in 0.9[cite: 3], and starting the Cowboys defense yielded -1.0 points[cite: 3] while Jayden Daniels' 26.3 sat idle on the bench[cite: 3]. When kicker Jason Myers (23.0) represents more than 20% of your entire offensive production[cite: 3], you aren't running an NFL offense—you're running a field goal donation drive.
+      </div>
+    </div>
+  </div>
+
+  <!-- Matchup 2: The Juggernaut Extends His Reign -->
+  <div class="matchup-card">
+    <div class="scoreboard">
+      <div class="team-side winner">
+        <span class="team-name">TREY_LECHE</span>
+        <span class="manager-name">Trey</span>
+        <span class="team-score">174.0</span>
+      </div>
+      <div class="vs-badge">def</div>
+      <div class="team-side loser">
+        <span class="team-name">Michael's Magnificent Team</span>
+        <span class="manager-name">Michael M</span>
+        <span class="team-score">119.3</span>
+      </div>
+    </div>
+    <div class="analysis-section">
+      <div class="winner-breakdown">
+        <span class="tag tag-win">Victor</span> Trey stays undefeated at 5–0 with a 174.0-point juggernaut performance[cite: 3]. Bucky Irving erupted for 30.5[cite: 3], Texans D/ST locked down 21.0[cite: 3], JSN stayed money with 20.3[cite: 3], Garrett Wilson caught 19.9[cite: 3], and Brock Bowers posted 19.0[cite: 3]. Trey had so much surplus firepower he left a 26-point 49ers defense on his bench[cite: 3].
+      </div>
+      <div class="loser-roast">
+        <span class="tag tag-roast">The Two-Man Sinking Ship (Michael M)</span> Drake Maye went nuclear with 37.5 points (5 total TDs)[cite: 3] and Puka Nacua returned 29.2[cite: 3]. That is 66.7 elite points from two starters, and you STILL took a 54.7-point blowout loss[cite: 3] because Jeremiyah Love gave you 2.2[cite: 3], Dalton Kincaid laid an egg with 3.2[cite: 3], and Roman Wilson gave you 0.0[cite: 3]. A two-man rescue squad attached to seven anchor weights is how you wake up 0–5[cite: 3].
+      </div>
+    </div>
+  </div>
+
+  <!-- Matchup 3: The Historic Slump -->
+  <div class="matchup-card">
+    <div class="scoreboard">
+      <div class="team-side winner">
+        <span class="team-name">Julian's Scary Team</span>
+        <span class="manager-name">Julian</span>
+        <span class="team-score">131.8</span>
+      </div>
+      <div class="vs-badge">def</div>
+      <div class="team-side loser">
+        <span class="team-name">Falcon Punch A$$A$$IN$</span>
+        <span class="manager-name">Kam</span>
+        <span class="team-score">57.6</span>
+      </div>
+    </div>
+    <div class="analysis-section">
+      <div class="winner-breakdown">
+        <span class="tag tag-win">Victor</span> Julian cruises to 4–1 on 131.8 points[cite: 3]. Parker Washington dominated target volume for 27.4[cite: 3], Derrick Henry hammered in 20.5[cite: 3], Ja'Marr Chase scored 16.7[cite: 3], and the Jets D/ST dismantled their opponent for a massive 28.0 fantasy points[cite: 3]—allowing Julian to leave Christian Watson’s 29.3 on the pine without consequence[cite: 3].
+      </div>
+      <div class="loser-roast">
+        <span class="tag tag-roast">The Decoy Squad (Kam)</span> A pathetic, league-worst 57.6 points[cite: 3]. Justin Herbert limped to 4.4[cite: 3], Chase Brown managed 5.5[cite: 3], Chris Olave had 6.6[cite: 3], Quinshon Judkins got bottled up for 6.5[cite: 3], and Colston Loveland brought in 2.9[cite: 3]. Ollie Gordon (14.8) was your ONLY starter to cross double digits[cite: 3]. Stashing a zero-point Travis Kelce while fielding a starting offense that couldn't even outscore Julian’s defense and kicker combined (37.0) is pure decoy football[cite: 3].
+      </div>
+    </div>
+  </div>
+
+  <!-- Matchup 4: Gibbs Carries the Load -->
+  <div class="matchup-card">
+    <div class="scoreboard">
+      <div class="team-side winner">
+        <span class="team-name">Nguyener Nguyener Chkn Dinner</span>
+        <span class="manager-name">Johnny</span>
+        <span class="team-score">127.4</span>
+      </div>
+      <div class="vs-badge">def</div>
+      <div class="team-side loser">
+        <span class="team-name">TheLegendKiller</span>
+        <span class="manager-name">Brad</span>
+        <span class="team-score">95.3</span>
+      </div>
+    </div>
+    <div class="analysis-section">
+      <div class="winner-breakdown">
+        <span class="tag tag-win">Victor</span> Johnny rebounds to 4–1 behind Jahmyr Gibbs’ 35.2-point masterclass[cite: 3]. Davante Adams bounced back for 19.6[cite: 3], Trey McBride proved his elite TE1 volume with 17.1[cite: 3], and the Seahawks D/ST chipped in 14.0[cite: 3]—giving Johnny enough cushion to leave Mike Evans’ 22.8 on the bench[cite: 3].
+      </div>
+      <div class="loser-roast">
+        <span class="tag tag-roast">The Hospital Ward (Brad)</span> Rebranding from 09RandyOrton to "TheLegendKiller" didn't stop this roster from looking like a triage unit. Lamar Jackson out with an ankle sprain, Saquon Barkley sidelined with a hamstring, DJ Moore battling an AC joint issue, Ladd McConkey nursing a foot injury, Marvin Harrison Jr. out, and Tyreek Hill on IR[cite: 3]. Rolling out Jacoby Brissett (19.1) on an IV drip couldn't save you when T.J. Hockenson flatlined for 1.2[cite: 3] and Michael Wilson caught 5.0[cite: 3]. A name change cannot cure a 1–4 ICU ward[cite: 3].
+      </div>
+    </div>
+  </div>
+
+  <!-- Matchup 5: The Two-Man Show -->
+  <div class="matchup-card">
+    <div class="scoreboard">
+      <div class="team-side winner">
+        <span class="team-name">PHANTOMTHREE-PEAT</span>
+        <span class="manager-name">Michael D</span>
+        <span class="team-score">128.6</span>
+      </div>
+      <div class="vs-badge">def</div>
+      <div class="team-side loser">
+        <span class="team-name">Heavy Metal</span>
+        <span class="manager-name">Robert</span>
+        <span class="team-score">105.0</span>
+      </div>
+    </div>
+    <div class="analysis-section">
+      <div class="winner-breakdown">
+        <span class="tag tag-win">Victor</span> Michael D remains a top-tier contender at 4–1[cite: 3]. Josh Allen played wrecking ball with 29.1[cite: 3], Isaiah Likely dominated intermediate routes for 26.9[cite: 3], Browns defense posted 18.0[cite: 3], and Matthew Golden chipped in 17.3[cite: 3].
+      </div>
+      <div class="loser-roast">
+        <span class="tag tag-roast">The Ghost Protocol (Robert)</span> Robert squandered another chance to stay over .500[cite: 3]. Joe Burrow (24.0)[cite: 3] and Tyler Warren (17.9)[cite: 3] gave you life, but your skill positions pulled a vanishing act. Jonathan Taylor was bottled up for 9.7[cite: 3], Tee Higgins was phased out for 3.2[cite: 3], and Deebo Samuel Sr. was an absolute phantom with 1.5 points on a 9.28 projection[cite: 3]. When your RB1, WR2, and Flex combine for 14.4[cite: 3], you can’t survive Josh Allen and Isaiah Likely combining for 56.0[cite: 3].
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">Actual vs. Potential Lineup Efficiency (Week 5)</div>
+
+  <!-- Optimal Lineup Table -->
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>Matchup Teams</th>
+          <th style="text-align: right;">Actual Score</th>
+          <th style="text-align: right;">Optimal Max</th>
+          <th style="text-align: center;">Lineup Eff.</th>
+          <th>Actual Winner</th>
+          <th>Optimal Winner</th>
+          <th>Matchup Swing Reality</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="col-team">Coach $howtime</td>
+          <td style="text-align: right; font-weight: 700;">198.3</td>
+          <td style="text-align: right; font-weight: 700;">198.3</td>
+          <td style="text-align: center; color: var(--win-green); font-weight: 700;">100.0%</td>
+          <td class="highlight-opt-winner">Coach $howtime</td>
+          <td class="highlight-opt-winner">Coach $howtime</td>
+          <td>Untouchable; 100% optimal setting</td>
+        </tr>
+        <tr>
+          <td class="col-team">ACHANE Gang (The Field Goal Charity)</td>
+          <td style="text-align: right;">109.5</td>
+          <td style="text-align: right;">112.7</td>
+          <td style="text-align: center;">97.2%</td>
+          <td>-</td>
+          <td>-</td>
+          <td>Optimal bench swaps (+3.2) changed nothing</td>
+        </tr>
+        <tr>
+          <td class="col-team">TREY_LECHE</td>
+          <td style="text-align: right; font-weight: 700;">174.0</td>
+          <td style="text-align: right; font-weight: 700;">179.9</td>
+          <td style="text-align: center;">96.7%</td>
+          <td class="highlight-opt-winner">TREY_LECHE</td>
+          <td class="highlight-opt-winner">TREY_LECHE</td>
+          <td>Complete blowout; had 26pt D/ST on bench</td>
+        </tr>
+        <tr>
+          <td class="col-team">Michael's Magnificent Team (Two-Man Sinking Ship)</td>
+          <td style="text-align: right;">119.3</td>
+          <td style="text-align: right;">123.6</td>
+          <td style="text-align: center;">96.5%</td>
+          <td>-</td>
+          <td>-</td>
+          <td>Maye + Puka heroics crushed by dead weight</td>
+        </tr>
+        <tr>
+          <td class="col-team">Julian's Scary Team</td>
+          <td style="text-align: right; font-weight: 700;">131.8</td>
+          <td style="text-align: right; font-weight: 700;">156.4</td>
+          <td style="text-align: center;">84.3%</td>
+          <td class="highlight-opt-winner">Julian's Scary</td>
+          <td class="highlight-opt-winner">Julian's Scary</td>
+          <td>Cruised despite leaving 29.3 from Watson on bench</td>
+        </tr>
+        <tr>
+          <td class="col-team">Falcon Punch A$$A$$IN$ (The Decoy Squad)</td>
+          <td style="text-align: right;">57.6</td>
+          <td style="text-align: right;">65.3</td>
+          <td style="text-align: center;">88.2%</td>
+          <td>-</td>
+          <td>-</td>
+          <td>Zero ceiling; only 1 player over 10 pts</td>
+        </tr>
+        <tr>
+          <td class="col-team">Nguyener Nguyener Chkn Dinner</td>
+          <td style="text-align: right; font-weight: 700;">127.4</td>
+          <td style="text-align: right; font-weight: 700;">140.6</td>
+          <td style="text-align: center;">90.6%</td>
+          <td class="highlight-opt-winner">Nguyener Nguyener</td>
+          <td class="highlight-opt-winner">Nguyener Nguyener</td>
+          <td>Comfortable win even with Evans (22.8) benched</td>
+        </tr>
+        <tr>
+          <td class="col-team">TheLegendKiller (The Hospital Ward)</td>
+          <td style="text-align: right;">95.3</td>
+          <td style="text-align: right;">95.3</td>
+          <td style="text-align: center; color: var(--win-green); font-weight: 700;">100.0%</td>
+          <td>-</td>
+          <td>-</td>
+          <td>Optimal ceiling capped by endless injuries</td>
+        </tr>
+        <tr>
+          <td class="col-team">PHANTOMTHREE-PEAT</td>
+          <td style="text-align: right; font-weight: 700;">128.6</td>
+          <td style="text-align: right; font-weight: 700;">130.5</td>
+          <td style="text-align: center;">98.5%</td>
+          <td class="highlight-opt-winner">PHANTOMTHREE-PEAT</td>
+          <td class="highlight-opt-winner">PHANTOMTHREE-PEAT</td>
+          <td>Kept full control behind Allen &amp; Likely</td>
+        </tr>
+        <tr>
+          <td class="col-team">Heavy Metal (The Ghost Protocol)</td>
+          <td style="text-align: right;">105.0</td>
+          <td style="text-align: right;">110.4</td>
+          <td style="text-align: center;">95.1%</td>
+          <td>-</td>
+          <td>-</td>
+          <td>Starting RB1, WR2, Flex scored 14.4 combined</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-title">Updated Standings (After Week 5)</div>
+
+  <!-- Standings Table -->
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th class="col-rank">#</th>
+          <th>Team &amp; Manager</th>
+          <th style="text-align: center;">Record</th>
+          <th style="text-align: right;">Total PF</th>
+          <th>Week 5 Reality Check</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="col-rank">1</td>
+          <td class="col-team">TREY_LECHE <span class="manager-name">(Trey)</span></td>
+          <td style="text-align: center;" class="col-rec badge-undefeated">5–0</td>
+          <td style="text-align: right; font-weight: 700;">688.6</td>
+          <td>Sole undefeated powerhouse; 174.0 offensive clinic</td>
+        </tr>
+        <tr>
+          <td class="col-rank">2</td>
+          <td class="col-team">Nguyener Nguyener Chkn Dinner <span class="manager-name">(Johnny)</span></td>
+          <td style="text-align: center;" class="col-rec">4–1</td>
+          <td style="text-align: right; font-weight: 700;">682.9</td>
+          <td>Points leader among 4–1 teams; Gibbs puts up 35.2</td>
+        </tr>
+        <tr>
+          <td class="col-rank">3</td>
+          <td class="col-team">PHANTOMTHREE-PEAT <span class="manager-name">(Michael D)</span></td>
+          <td style="text-align: center;" class="col-rec">4–1</td>
+          <td style="text-align: right; font-weight: 700;">609.0</td>
+          <td>Allen + Likely stack carries squad over Heavy Metal</td>
+        </tr>
+        <tr>
+          <td class="col-rank">4</td>
+          <td class="col-team">Julian's Scary Team <span class="manager-name">(Julian)</span></td>
+          <td style="text-align: center;" class="col-rec">4–1</td>
+          <td style="text-align: right; font-weight: 700;">603.4</td>
+          <td>Parker Washington &amp; Jets D roll over Falcon Punch</td>
+        </tr>
+        <tr>
+          <td class="col-rank">5</td>
+          <td class="col-team">Coach $howtime <span class="manager-name">(Samuel)</span></td>
+          <td style="text-align: center;" class="col-rec">3–2</td>
+          <td style="text-align: right; font-weight: 700;">627.3</td>
+          <td>Hangs 198.3-point league record; 100% optimal lineup</td>
+        </tr>
+        <tr>
+          <td class="col-rank">6</td>
+          <td class="col-team">Heavy Metal <span class="manager-name">(Robert)</span></td>
+          <td style="text-align: center;" class="col-rec">2–3</td>
+          <td style="text-align: right; font-weight: 700;">546.0</td>
+          <td>Sole 2-win team; starting skill positions disappeared</td>
+        </tr>
+        <tr>
+          <td class="col-rank">7</td>
+          <td class="col-team">ACHANE Gang <span class="manager-name">(Freddy)</span></td>
+          <td style="text-align: center;" class="col-rec">1–4</td>
+          <td style="text-align: right; font-weight: 700;">561.9</td>
+          <td>Highest PF in 1–4 tier; kicker was only real offense</td>
+        </tr>
+        <tr>
+          <td class="col-rank">8</td>
+          <td class="col-team">TheLegendKiller <span class="manager-name">(Brad)</span></td>
+          <td style="text-align: center;" class="col-rec">1–4</td>
+          <td style="text-align: right; font-weight: 700;">485.2</td>
+          <td>Entire core on injury report; Brissett can't save them</td>
+        </tr>
+        <tr>
+          <td class="col-rank">9</td>
+          <td class="col-team">Falcon Punch A$$A$$IN$ <span class="manager-name">(Kam)</span></td>
+          <td style="text-align: center;" class="col-rec">1–4</td>
+          <td style="text-align: right; font-weight: 700;">478.7</td>
+          <td>Bottomed out with 57.6 points; Kelce decoy mode</td>
+        </tr>
+        <tr>
+          <td class="col-rank">10</td>
+          <td class="col-team">Michael's Magnificent Team <span class="manager-name">(Michael M)</span></td>
+          <td style="text-align: center;" class="col-rec badge-winless">0–5</td>
+          <td style="text-align: right; font-weight: 700;">493.6</td>
+          <td>Wastes Drake Maye's 37.5 masterclass; remains winless</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+</body>
+</html>

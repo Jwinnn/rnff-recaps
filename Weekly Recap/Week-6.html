@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RNFF Week 6 Report</title>
+<style>
+  :root {
+    --bg-main: #0b0e14;
+    --card-bg: #151922;
+    --card-border: #262c3a;
+    --accent-red: #c8102e;
+    --accent-gold: #f59e0b;
+    --win-green: #10b981;
+    --loss-red: #ef4444;
+    --text-primary: #f3f4f6;
+    --text-secondary: #9ca3af;
+    --text-muted: #6b7280;
+  }
+
+  body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 860px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .header-card {
+    background: linear-gradient(135deg, #1f2430 0%, #11141c 100%);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 100%;
+    background-color: var(--accent-red);
+  }
+
+  .league-tag {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent-gold);
+    margin-bottom: 4px;
+  }
+
+  h1 {
+    font-size: 1.75rem;
+    font-weight: 800;
+    margin: 0 0 12px 0;
+    letter-spacing: -0.02em;
+  }
+
+  .editorial-note {
+    background: rgba(200, 16, 46, 0.08);
+    border-left: 3px solid var(--accent-red);
+    padding: 12px 14px;
+    border-radius: 0 6px 6px 0;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: #e5e7eb;
+  }
+
+  .editorial-note strong {
+    color: #fff;
+  }
+
+  .section-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 8px 0 0 0;
+  }
+
+  .matchup-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .scoreboard {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.02);
+    border-bottom: 1px solid var(--card-border);
+    padding: 14px 18px;
+  }
+
+  .team-side {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .team-side.winner {
+    text-align: left;
+  }
+
+  .team-side.loser {
+    text-align: right;
+  }
+
+  .team-name {
+    font-size: 1rem;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .manager-name {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  .team-score {
+    font-size: 1.35rem;
+    font-weight: 800;
+    margin-top: 2px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .team-side.winner .team-score {
+    color: var(--win-green);
+  }
+
+  .team-side.loser .team-score {
+    color: var(--loss-red);
+  }
+
+  .vs-badge {
+    padding: 0 12px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+
+  .analysis-section {
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 0.85rem;
+    line-height: 1.45;
+  }
+
+  .winner-breakdown {
+    color: #d1d5db;
+    border-left: 2px solid var(--win-green);
+    padding-left: 10px;
+  }
+
+  .loser-roast {
+    color: #fca5a5;
+    background: rgba(239, 68, 68, 0.05);
+    border-left: 2px solid var(--loss-red);
+    padding: 8px 10px;
+    border-radius: 0 4px 4px 0;
+  }
+
+  .tag {
+    display: inline-block;
+    font-weight: 700;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-right: 4px;
+  }
+
+  .tag-win {
+    color: var(--win-green);
+  }
+
+  .tag-roast {
+    color: var(--loss-red);
+  }
+
+  .table-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.82rem;
+  }
+
+  th {
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text-secondary);
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--card-border);
+  }
+
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    color: var(--text-secondary);
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  .col-rank {
+    font-weight: 700;
+    width: 24px;
+    color: var(--text-muted);
+  }
+
+  .col-team {
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .col-rec {
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  .badge-undefeated {
+    color: var(--accent-gold);
+    font-weight: 800;
+  }
+
+  .badge-winless {
+    color: var(--loss-red);
+    font-weight: 800;
+  }
+
+  .highlight-opt-winner {
+    color: var(--win-green);
+    font-weight: 700;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header Card -->
+  <div class="header-card">
+    <div class="league-tag">RN Fantasy Football League &bull; Week 6</div>
+    <h1>Week 6 Matchup Recap &amp; Roast Report</h1>
+    <div class="editorial-note">
+      <strong>The Week 6 Shakeup:</strong> The final undefeated team in the RNFF has fallen. Bye weeks and sudden offensive dead zones shook the leaderboard to its core. Between heavy-volume running backs hitting defensive walls and managers watching waiver acquisitions immediately make or break matchups, Week 6 rewarded squads with real tactical depth and punished those auto-piloting on name value alone.
+    </div>
+  </div>
+
+  <div class="section-title">Matchup Breakdowns</div>
+
+  <!-- Matchup 1: Game of the Week -->
+  <div class="matchup-card">
+    <div class="scoreboard">
+      <div class="team-side winner">
+        <span class="team-name">PHANTOMTHREE-PEAT</span>
+        <span class="manager-name">Michael D</span>
+        <span class="team-score">107.5</span>
+      </div>
+      <div class="vs-badge">def</div>
+      <div class="team-side loser">
+        <span class="team-name">TREY_LECHE</span>
+        <span class="manager-name">Trey</span>
+        <span class="team-score">100.4</span>
+      </div>
+    </div>
+    <div class="analysis-section">
+      <div class="winner-breakdown">
+        <span class="tag tag-win">Victor</span> Michael D claims the biggest scalp of the year, handing Trey his first defeat of 2026. Kenneth Walker III was an unstoppable workhorse with 26.9 points, Isaiah Likely posted 20.9 in a featured role, and Matthew Golden proved his target share is legitimate with 19.4. Michael D survived a -1.0 from the Texans defense and 32.2 points stranded on his bench to grab a share of first place.
+      </div>
+      <div class="loser-roast">
+        <span class="tag tag-roast">The Spoiled Milk (Trey)</span> The 5–0 aura officially curdled. Trey spent $25 in FAAB on Woody Marks only to bury him on the bench, instead watching Bucky Irving (5.9) get swallowed in committee work and Garrett Wilson (6.4) suffocate against bracketed coverage. Dak Prescott limped through a turnover-heavy 9.7 points. Trey had JSN (19.4) and Chuba Hubbard (18.6), but starting an RB2 and QB that combined for 15.6 points ended perfection in a hurry.
+      </div>
+    </div>
+  </div>
+
+  <!-- Matchup 2: The Ground-and-Pound Beatdown -->
+  <div class="matchup-card">
+    <div class="scoreboard">
+      <div class="team-side winner">
+        <span class="team-name">Coach $howtime</span>
+        <span class="manager-name">Samuel</span>
+        <span class="team-score">114.2</span>
+      </div>
+      <div class="vs-badge">def</div>
+      <div class="team-side loser">
+        <span class="team-name">Nguyener Nguyener Chkn Dinner</span>
+        <span class="manager-name">Johnny</span>
+        <span class="team-score">74.5</span>
+      </div>
+    </div>
+    <div class="analysis-section">
+      <div class="winner-breakdown">
+        <span class="tag tag-win">Victor</span> Samuel marches to his third consecutive win behind James Cook’s 22.8-point masterclass, Carnell Tate’s high-volume perimeter breakout (16.0), and the Ravens D/ST racking up 17.0 points. Samuel executed cleanly, leaving the Broncos defense's 19.0 on the bench without breaking a sweat.
+      </div>
+      <div class="loser-roast">
+        <span class="tag tag-roast">The Raw Poultry (Johnny)</span> An absolute offensive disaster of 74.5 points. Fresh off dropping $27 of FAAB on MarShawn Lloyd, Johnny watched him limp to a 1.0-point showing on 3 touches. Davante Adams got locked down for 5.4, Tony Pollard sputtered for 7.6, and A.J. Brown looked completely rusty with 4.2 in his return. When your kicker and defense account for over 30% of your total score while Stefon Diggs' 13.4 sits on the bench, you didn't cook anything—you served raw chicken.
+      </div>
+    </div>
+  </div>
+
+  <!-- Matchup 3: The Waiver Revenge Match -->
+  <div class="matchup-card">
+    <div class="scoreboard">
+      <div class="team-side winner">
+        <span class="team-name">Falcon Punch A$$A$$IN$</span>
+        <span class="manager-name">Kam</span>
+        <span class="team-score">107.6</span>
+      </div>
+      <div class="vs-badge">def</div>
+      <div class="team-side loser">
+        <span class="team-name">ACHANE Gang</span>
+        <span class="manager-name">Freddy</span>
+        <span class="team-score">104.3</span>
+      </div>
+    </div>
+    <div class="analysis-section">
+      <div class="winner-breakdown">
+        <span class="tag tag-win">Victor</span> Kam pulls off the upset via pure defensive dominance and sweet waiver wire revenge. The Steelers defense brought 19.0 points, while Alvin Kamara—rage-dropped by Coach $howtime and scooped by Kam—slotted immediately into the RB slot for 13.9 points. Jordan Love stabilized the quarterback position with 17.2 to secure the 107.6 victory.
+      </div>
+      <div class="loser-roast">
+        <span class="tag tag-roast">The One-Man Relay (Freddy)</span> Freddy got 45.2 combined points from Bhayshul Tuten (22.7) and Malik Nabers (22.5), and STILL managed to take an L. Jayden Daniels added 17.0, but the rest of the roster flatlined: CeeDee Lamb managed just 11.5, Emanuel Wilson gave you 5.2, and Harold Fannin brought in 1.4. Losing to an opponent who started Najee Harris for 0.2 points sends Freddy spiraling to 1–5 in the basement.
+      </div>
+    </div>
+  </div>
+
+  <!-- Matchup 4: The ICU Recovery Unit -->
+  <div class="matchup-card">
+    <div class="scoreboard">
+      <div class="team-side winner">
+        <span class="team-name">TheLegendKiller</span>
+        <span class="manager-name">Brad</span>
+        <span class="team-score">120.7</span>
+      </div>
+      <div class="vs-badge">def</div>
+      <div class="team-side loser">
+        <span class="team-name">Michael's Magnificent Team</span>
+        <span class="manager-name">Michael M</span>
+        <span class="team-score">85.4</span>
+      </div>
+    </div>
+    <div class="analysis-section">
+      <div class="winner-breakdown">
+        <span class="tag tag-win">Victor</span> The Hospital Ward finally showed signs of life. Christian McCaffrey exploded for 26.2 points, Tyler Shough tore through coverage for 26.2, D'Andre Swift broke off 21.0, and the Chiefs D/ST added 20.0 points to blow out Michael M by 35.3 points.
+      </div>
+      <div class="loser-roast">
+        <span class="tag tag-roast">The Magnificent Zero (Michael M)</span> 0–6 and mathematically in free fall. Drake Maye gave you 23.4 points and Ashton Jeanty brought 13.8, but the supporting cast failed to show up. Rhamondre Stevenson had 3.6, Tyler Loop missed kicks for 3.0, newly acquired Pat Freiermuth sat on the bench, and the Jaguars D/ST finished at -1.0. Trevor Lawrence's 27.1 points cheered from the bench while Michael remains the league's lone winless squad.
+      </div>
+    </div>
+  </div>
+
+  <!-- Matchup 5: The Field Goal & Front-Seven Slog -->
+  <div class="matchup-card">
+    <div class="scoreboard">
+      <div class="team-side winner">
+        <span class="team-name">Heavy Metal</span>
+        <span class="manager-name">Robert</span>
+        <span class="team-score">108.4</span>
+      </div>
+      <div class="vs-badge">def</div>
+      <div class="team-side loser">
+        <span class="team-name">Julian's Scary Team</span>
+        <span class="manager-name">Julian</span>
+        <span class="team-score">84.6</span>
+      </div>
+    </div>
+    <div class="analysis-section">
+      <div class="winner-breakdown">
+        <span class="tag tag-win">Victor</span> Robert gets back to an even .500 (3–3) behind Jonathan Taylor’s 20.1 points and DeVonta Smith’s 17.0. But kicker Chase McLaughlin (17.0 points) and the 49ers defense (12.0) were the true difference-makers, locking down a 100% optimal lineup performance.
+      </div>
+      <div class="loser-roast">
+        <span class="tag tag-roast">The Paper Tigers (Julian)</span> Julian’s team was terrified of finding the end zone. Derrick Henry ran straight into a wall for 4.5 points, Christian Watson managed 7.9, and Parker Washington brought in 8.4. Only George Kittle (15.4) and Rachaad White (13.7) came to play. Benching Emeka Egbuka (14.3) and Blake Corum (13.0) while putting up 84.6 points proves Julian's squad is only scary on paper.
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">Actual vs. Potential Lineup Efficiency (Week 6)</div>
+
+  <!-- Optimal Lineup Table -->
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>Matchup Teams</th>
+          <th style="text-align: right;">Actual Score</th>
+          <th style="text-align: right;">Optimal Max</th>
+          <th style="text-align: center;">Lineup Eff.</th>
+          <th>Actual Winner</th>
+          <th>Optimal Winner</th>
+          <th>Matchup Swing Reality</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="col-team">PHANTOMTHREE-PEAT</td>
+          <td style="text-align: right; font-weight: 700;">107.5</td>
+          <td style="text-align: right; font-weight: 700;">139.7</td>
+          <td style="text-align: center;">76.9%</td>
+          <td class="highlight-opt-winner">PHANTOMTHREE-PEAT</td>
+          <td class="highlight-opt-winner">PHANTOMTHREE-PEAT</td>
+          <td>Dominant win despite benching Tre Tucker (24.2)</td>
+        </tr>
+        <tr>
+          <td class="col-team">TREY_LECHE (The Spoiled Milk)</td>
+          <td style="text-align: right;">100.4</td>
+          <td style="text-align: right;">103.6</td>
+          <td style="text-align: center;">96.9%</td>
+          <td>-</td>
+          <td>-</td>
+          <td>Marks over Bucky (+3.2) wouldn't overcome defeat</td>
+        </tr>
+        <tr>
+          <td class="col-team">Coach $howtime</td>
+          <td style="text-align: right; font-weight: 700;">114.2</td>
+          <td style="text-align: right; font-weight: 700;">116.2</td>
+          <td style="text-align: center;">98.3%</td>
+          <td class="highlight-opt-winner">Coach $howtime</td>
+          <td class="highlight-opt-winner">Coach $howtime</td>
+          <td>Cook + Ravens D/ST secured third straight win</td>
+        </tr>
+        <tr>
+          <td class="col-team">Nguyener Nguyener (The Raw Poultry)</td>
+          <td style="text-align: right;">74.5</td>
+          <td style="text-align: right;">83.7</td>
+          <td style="text-align: center;">89.0%</td>
+          <td>-</td>
+          <td>-</td>
+          <td>Offense froze; Lloyd, Adams, Brown combined for 10.6</td>
+        </tr>
+        <tr>
+          <td class="col-team">Heavy Metal</td>
+          <td style="text-align: right; font-weight: 700;">108.4</td>
+          <td style="text-align: right; font-weight: 700;">108.4</td>
+          <td style="text-align: center; color: var(--win-green); font-weight: 700;">100.0%</td>
+          <td class="highlight-opt-winner">Heavy Metal</td>
+          <td class="highlight-opt-winner">Heavy Metal</td>
+          <td>100% optimal lineup; kicker + defense carry the W</td>
+        </tr>
+        <tr>
+          <td class="col-team">Julian's Scary Team (The Paper Tigers)</td>
+          <td style="text-align: right;">84.6</td>
+          <td style="text-align: right;">98.9</td>
+          <td style="text-align: center;">85.5%</td>
+          <td>-</td>
+          <td>-</td>
+          <td>Benching Egbuka (14.3) and Corum (13.0) hurt ceiling</td>
+        </tr>
+        <tr>
+          <td class="col-team">Falcon Punch A$$A$$IN$</td>
+          <td style="text-align: right; font-weight: 700;">107.6</td>
+          <td style="text-align: right; font-weight: 700;">108.0</td>
+          <td style="text-align: center;">99.6%</td>
+          <td class="highlight-opt-winner">Falcon Punch</td>
+          <td class="highlight-opt-winner">Falcon Punch</td>
+          <td>Kamara waiver revenge + Steelers D/ST pull upset</td>
+        </tr>
+        <tr>
+          <td class="col-team">ACHANE Gang (The One-Man Relay)</td>
+          <td style="text-align: right;">104.3</td>
+          <td style="text-align: right;">112.1</td>
+          <td style="text-align: center;">93.0%</td>
+          <td>-</td>
+          <td>-</td>
+          <td>Tuten + Nabers (45.2) wasted; drops to 1-5</td>
+        </tr>
+        <tr>
+          <td class="col-team">TheLegendKiller</td>
+          <td style="text-align: right; font-weight: 700;">120.7</td>
+          <td style="text-align: right; font-weight: 700;">123.4</td>
+          <td style="text-align: center;">97.8%</td>
+          <td class="highlight-opt-winner">TheLegendKiller</td>
+          <td class="highlight-opt-winner">TheLegendKiller</td>
+          <td>CMC, Shough, Swift, Chiefs D all break 20+</td>
+        </tr>
+        <tr>
+          <td class="col-team">Michael's Magnificent (The Magnificent Zero)</td>
+          <td style="text-align: right;">85.4</td>
+          <td style="text-align: right;">92.2</td>
+          <td style="text-align: center;">92.6%</td>
+          <td>-</td>
+          <td>-</td>
+          <td>Winless 0-6; Lawrence (27.1) benched for Maye</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-title">Updated Standings (After Week 6)</div>
+
+  <!-- Standings Table -->
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th class="col-rank">#</th>
+          <th>Team &amp; Manager</th>
+          <th style="text-align: center;">Record</th>
+          <th style="text-align: right;">Total PF</th>
+          <th>Week 6 Reality Check</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="col-rank">1</td>
+          <td class="col-team">TREY_LECHE <span class="manager-name">(Trey)</span></td>
+          <td style="text-align: center;" class="col-rec badge-undefeated">5–1</td>
+          <td style="text-align: right; font-weight: 700;">789.0</td>
+          <td>First loss of 2026; still leads the league in total scoring</td>
+        </tr>
+        <tr>
+          <td class="col-rank">2</td>
+          <td class="col-team">PHANTOMTHREE-PEAT <span class="manager-name">(Michael D)</span></td>
+          <td style="text-align: center;" class="col-rec">5–1</td>
+          <td style="text-align: right; font-weight: 700;">716.5</td>
+          <td>Takes down the #1 seed; tied for first place overall</td>
+        </tr>
+        <tr>
+          <td class="col-rank">3</td>
+          <td class="col-team">Nguyener Nguyener Chkn Dinner <span class="manager-name">(Johnny)</span></td>
+          <td style="text-align: center;" class="col-rec">4–2</td>
+          <td style="text-align: right; font-weight: 700;">757.4</td>
+          <td>Retains #1 PF among 4-2 teams despite 74.5-point dud</td>
+        </tr>
+        <tr>
+          <td class="col-rank">4</td>
+          <td class="col-team">Coach $howtime <span class="manager-name">(Samuel)</span></td>
+          <td style="text-align: center;" class="col-rec">4–2</td>
+          <td style="text-align: right; font-weight: 700;">741.5</td>
+          <td>Three-game win streak; Cook and Ravens D rolling</td>
+        </tr>
+        <tr>
+          <td class="col-rank">5</td>
+          <td class="col-team">Julian's Scary Team <span class="manager-name">(Julian)</span></td>
+          <td style="text-align: center;" class="col-rec">4–2</td>
+          <td style="text-align: right; font-weight: 700;">688.0</td>
+          <td>Stumbles to 84.6; paper tigers when Henry is bottled up</td>
+        </tr>
+        <tr>
+          <td class="col-rank">6</td>
+          <td class="col-team">Heavy Metal <span class="manager-name">(Robert)</span></td>
+          <td style="text-align: center;" class="col-rec">3–3</td>
+          <td style="text-align: right; font-weight: 700;">654.4</td>
+          <td>Back to .500 on a 100% optimal lineup performance</td>
+        </tr>
+        <tr>
+          <td class="col-rank">7</td>
+          <td class="col-team">TheLegendKiller <span class="manager-name">(Brad)</span></td>
+          <td style="text-align: center;" class="col-rec">2–4</td>
+          <td style="text-align: right; font-weight: 700;">605.9</td>
+          <td>CMC and Shough lead a 120.7 breakout victory</td>
+        </tr>
+        <tr>
+          <td class="col-rank">8</td>
+          <td class="col-team">Falcon Punch A$$A$$IN$ <span class="manager-name">(Kam)</span></td>
+          <td style="text-align: center;" class="col-rec">2–4</td>
+          <td style="text-align: right; font-weight: 700;">586.3</td>
+          <td>Kamara waiver revenge + Steelers defense deliver the upset</td>
+        </tr>
+        <tr>
+          <td class="col-rank">9</td>
+          <td class="col-team">ACHANE Gang <span class="manager-name">(Freddy)</span></td>
+          <td style="text-align: center;" class="col-rec">1–5</td>
+          <td style="text-align: right; font-weight: 700;">666.2</td>
+          <td>High PF in cellar; Nabers + Tuten unable to overcome duds</td>
+        </tr>
+        <tr>
+          <td class="col-rank">10</td>
+          <td class="col-team">Michael's Magnificent Team <span class="manager-name">(Michael M)</span></td>
+          <td style="text-align: center;" class="col-rec badge-winless">0–6</td>
+          <td style="text-align: right; font-weight: 700;">579.0</td>
+          <td>Lone winless squad; Lawrence's 27.1 benched in vain</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+</body>
+</html>

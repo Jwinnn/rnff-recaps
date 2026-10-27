@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RNFF Week 3 Report</title>
+<style>
+  :root {
+    --bg-main: #0b0e14;
+    --card-bg: #151922;
+    --card-border: #262c3a;
+    --accent-red: #c8102e; /* UH Red */
+    --accent-gold: #f59e0b;
+    --win-green: #10b981;
+    --loss-red: #ef4444;
+    --text-primary: #f3f4f6;
+    --text-secondary: #9ca3af;
+    --text-muted: #6b7280;
+  }
+
+  body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container {
+    max-width: 820px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* Header Card */
+  .header-card {
+    background: linear-gradient(135deg, #1f2430 0%, #11141c 100%);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 100%;
+    background-color: var(--accent-red);
+  }
+
+  .league-tag {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent-gold);
+    margin-bottom: 4px;
+  }
+
+  h1 {
+    font-size: 1.75rem;
+    font-weight: 800;
+    margin: 0 0 12px 0;
+    letter-spacing: -0.02em;
+  }
+
+  .keenum-salute {
+    background: rgba(200, 16, 46, 0.1);
+    border-left: 3px solid var(--accent-red);
+    padding: 12px 14px;
+    border-radius: 0 6px 6px 0;
+    font-size: 0.85rem;
+    line-height: 1.45;
+    color: #e5e7eb;
+  }
+
+  .keenum-salute strong {
+    color: #fff;
+  }
+
+  /* Section Title */
+  .section-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 8px 0 0 0;
+  }
+
+  /* Matchup Card */
+  .matchup-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .scoreboard {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.02);
+    border-bottom: 1px solid var(--card-border);
+    padding: 14px 18px;
+  }
+
+  .team-side {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .team-side.winner {
+    text-align: left;
+  }
+
+  .team-side.loser {
+    text-align: right;
+  }
+
+  .team-name {
+    font-size: 1rem;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .manager-name {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  .team-score {
+    font-size: 1.35rem;
+    font-weight: 800;
+    margin-top: 2px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .team-side.winner .team-score {
+    color: var(--win-green);
+  }
+
+  .team-side.loser .team-score {
+    color: var(--loss-red);
+  }
+
+  .vs-badge {
+    padding: 0 12px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: var(--text-muted);
+    text-transform: uppercase;
+  }
+
+  .analysis-section {
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-size: 0.85rem;
+    line-height: 1.45;
+  }
+
+  .winner-breakdown {
+    color: #d1d5db;
+    border-left: 2px solid var(--win-green);
+    padding-left: 10px;
+  }
+
+  .loser-roast {
+    color: #fca5a5;
+    background: rgba(239, 68, 68, 0.05);
+    border-left: 2px solid var(--loss-red);
+    padding: 8px 10px;
+    border-radius: 0 4px 4px 0;
+  }
+
+  .tag {
+    display: inline-block;
+    font-weight: 700;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-right: 4px;
+  }
+
+  .tag-win {
+    color: var(--win-green);
+  }
+
+  .tag-roast {
+    color: var(--loss-red);
+  }
+
+  /* Standings Table Card */
+  .table-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.82rem;
+  }
+
+  th {
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text-secondary);
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--card-border);
+  }
+
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    color: var(--text-secondary);
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  .col-rank {
+    font-weight: 700;
+    width: 24px;
+    color: var(--text-muted);
+  }
+
+  .col-team {
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .col-rec {
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  .badge-3-0 {
+    color: var(--accent-gold);
+    font-weight: 800;
+  }
+
+  .badge-0-3 {
+    color: var(--loss-red);
+    font-weight: 800;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header -->
+  <div class="header-card">
+    <div class="league-tag">RN Fantasy Football League &bull; 2026</div>
+    <h1>Week 3 Recap &amp; Roast Report</h1>
+    <div class="keenum-salute">
+      <strong>Salute to UH Legend Case Keenum:</strong> An NCAA record-breaker, author of the Minneapolis Miracle, and a consummate pro who carved out a long NFL career purely on preparation, poise, and grit under center. Half of this league's active starters could stand to study his tape after the offensive disasters put on display this week.
+    </div>
+  </div>
+
+  <div class="section-title">Matchup Breakdowns</div>
+
+  <!-- Matchup 1 -->
+  <div class="matchup-card">
+    <div class="scoreboard">
+      <div class="team-side winner">
+        <span class="team-name">Nguyener Nguyener Chkn Dinner</span>
+        <span class="manager-name">Johnny Nguyen</span>
+        <span class="team-score">147.1</span>
+      </div>
+      <div class="vs-badge">def</div>
+      <div class="team-side loser">
+        <span class="team-name">Heavy Metal</span>
+        <span class="manager-name">Robert Esquivel</span>
+        <span class="team-score">111.9</span>
+      </div>
+    </div>
+    <div class="analysis-section">
+      <div class="winner-breakdown">
+        <span class="tag tag-win">Victor</span> An absolute masterclass. Johnny leaves no doubt who holds the league's top ceiling, putting up 147.1 points led by Jahmyr Gibbs' 37.9-point explosion (3 total TDs) and Brock Purdy's clean 30.4-point outing. Firing on all cylinders at 152.0 PPG.
+      </div>
+      <div class="loser-roast">
+        <span class="tag tag-roast">Roast</span> Robert posted a respectable 111.9 that wins several other matchups, but running directly into the Johnny woodchipper was an instant loss. Heavy Metal sounded more like an acoustic ukulele when the final buzzer sounded.
+      </div>
+    </div>
+  </div>
+
+  <!-- Matchup 2 -->
+  <div class="matchup-card">
+    <div class="scoreboard">
+      <div class="team-side winner">
+        <span class="team-name">TREY_LECHE</span>
+        <span class="manager-name">Trey Martin</span>
+        <span class="team-score">132.4</span>
+      </div>
+      <div class="vs-badge">def</div>
+      <div class="team-side loser">
+        <span class="team-name">ACHANE Gang</span>
+        <span class="manager-name">Freddy Alvarado</span>
+        <span class="team-score">109.0</span>
+      </div>
+    </div>
+    <div class="analysis-section">
+      <div class="winner-breakdown">
+        <span class="tag tag-win">Victor</span> Trey stays undefeated at 3–0 behind Jaxon Smith-Njigba’s 29.8-point masterclass (10 catches, 128 yards, 2 scores, and a trick-play completion). Efficient, deep, and ready for championship contention.
+      </div>
+      <div class="loser-roast">
+        <span class="tag tag-roast">Roast</span> 0–3, and yet another week stranded below 110 points. ACHANE Gang is currently operating as a weekly grief counseling group for drafted skill players who disappear by the 2nd quarter. Season is officially on life support.
+      </div>
+    </div>
+  </div>
+
+  <!-- Matchup 3 -->
+  <div class="matchup-card">
+    <div class="scoreboard">
+      <div class="team-side winner">
+        <span class="team-name">Julian's Scary Team</span>
+        <span class="manager-name">Julian Barron</span>
+        <span class="team-score">121.9</span>
+      </div>
+      <div class="vs-badge">def</div>
+      <div class="team-side loser">
+        <span class="team-name">Coach $howtime</span>
+        <span class="manager-name">Samuel Fanta</span>
+        <span class="team-score">110.2</span>
+      </div>
+    </div>
+    <div class="analysis-section">
+      <div class="winner-breakdown">
+        <span class="tag tag-win">Victor</span> True contenders find ways to win ugly. Julian moves to 3–0 despite absorbing an astonishing <strong>-6.0 points</strong> from the Packers D/ST. The rest of the starting lineup stepped up to absorb the damage.
+      </div>
+      <div class="loser-roast">
+        <span class="tag tag-roast">Roast</span> If losing to an opponent whose defense actively spotted you 6 points doesn't keep you awake, rolling out an Eagles defense for <strong>-1.0 point</strong> of your own should. Rename the squad <em>Coach No-Showtime</em> until you crack 300 points on the season.
+      </div>
+    </div>
+  </div>
+
+  <!-- Matchup 4 -->
+  <div class="matchup-card">
+    <div class="scoreboard">
+      <div class="team-side winner">
+        <span class="team-name">PHANTOMTHREE-PEAT</span>
+        <span class="manager-name">Michael Dereje</span>
+        <span class="team-score">113.3</span>
+      </div>
+      <div class="vs-badge">def</div>
+      <div class="team-side loser">
+        <span class="team-name">Michael's Magnificent Team</span>
+        <span class="manager-name">Michael Mclean</span>
+        <span class="team-score">73.8</span>
+      </div>
+    </div>
+    <div class="analysis-section">
+      <div class="winner-breakdown">
+        <span class="tag tag-win">Victor</span> Michael Dereje rides Bijan Robinson’s 34.3-point clinic (194 rush yards, 2 TDs) to an easy 2–1 record. When your RB1 outscores half of the other team's lineup, game scripts are effortless.
+      </div>
+      <div class="loser-roast">
+        <span class="tag tag-roast">Roast</span> Calling this roster "Magnificent" is consumer fraud. Drake Maye logged <strong>-0.2 points</strong> (2 INTs, 3 sacks, fumble lost), meaning an empty QB slot would have produced more. At 73.8 points and 0–3, you are currently the league's scheduled bye week.
+      </div>
+    </div>
+  </div>
+
+  <!-- Matchup 5 -->
+  <div class="matchup-card">
+    <div class="scoreboard">
+      <div class="team-side winner">
+        <span class="team-name">09RandyOrton</span>
+        <span class="manager-name">Brad Thorne</span>
+        <span class="team-score">109.7</span>
+      </div>
+      <div class="vs-badge">def</div>
+      <div class="team-side loser">
+        <span class="team-name">Falcon Punch A$$A$$IN$</span>
+        <span class="manager-name">Kam Close</span>
+        <span class="team-score">85.8</span>
+      </div>
+    </div>
+    <div class="analysis-section">
+      <div class="winner-breakdown">
+        <span class="tag tag-win">Victor</span> Brad strikes waiver gold on the Vikings defense, securing a dominant <strong>28.0 fantasy points</strong> (6 sacks, 2 picks, defensive TD) that completely bailed out a 1.0-point zero-show from Kyle Pitts.
+      </div>
+      <div class="loser-roast">
+        <span class="tag tag-roast">Roast</span> An assassin that missed by three zip codes. 85.8 points in standard scoring is painful to look at. Getting doubled up by your opponent's defense while your offense flatlines drops you into a cold 1–2 slump.
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">League Standings</div>
+
+  <!-- Standings Table -->
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th class="col-rank">#</th>
+          <th>Team &amp; Manager</th>
+          <th style="text-align: center;">Record</th>
+          <th style="text-align: right;">Total PF</th>
+          <th>Reality Check</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="col-rank">1</td>
+          <td class="col-team">Nguyener Nguyener Chkn Dinner <span class="manager-name">(Johnny)</span></td>
+          <td style="text-align: center;" class="col-rec badge-3-0">3–0</td>
+          <td style="text-align: right; font-weight: 700;">456.1</td>
+          <td>League powerhouse; averaging 152.0 PPG</td>
+        </tr>
+        <tr>
+          <td class="col-rank">2</td>
+          <td class="col-team">TREY_LECHE <span class="manager-name">(Trey)</span></td>
+          <td style="text-align: center;" class="col-rec badge-3-0">3–0</td>
+          <td style="text-align: right; font-weight: 700;">394.7</td>
+          <td>Dominant WR play; meeting Johnny in W4</td>
+        </tr>
+        <tr>
+          <td class="col-rank">3</td>
+          <td class="col-team">Julian's Scary Team <span class="manager-name">(Julian)</span></td>
+          <td style="text-align: center;" class="col-rec badge-3-0">3–0</td>
+          <td style="text-align: right; font-weight: 700;">377.2</td>
+          <td>Unbeaten despite a -6.0 D/ST performance</td>
+        </tr>
+        <tr>
+          <td class="col-rank">4</td>
+          <td class="col-team">PHANTOMTHREE-PEAT <span class="manager-name">(Michael D)</span></td>
+          <td style="text-align: center;" class="col-rec">2–1</td>
+          <td style="text-align: right; font-weight: 700;">367.7</td>
+          <td>Cruising behind Bijan Robinson’s elite ceiling</td>
+        </tr>
+        <tr>
+          <td class="col-rank">5</td>
+          <td class="col-team">Heavy Metal <span class="manager-name">(Robert)</span></td>
+          <td style="text-align: center;" class="col-rec">1–2</td>
+          <td style="text-align: right; font-weight: 700;">325.6</td>
+          <td>High-scoring victim of rough scheduling luck</td>
+        </tr>
+        <tr>
+          <td class="col-rank">6</td>
+          <td class="col-team">Falcon Punch A$$A$$IN$ <span class="manager-name">(Kam)</span></td>
+          <td style="text-align: center;" class="col-rec">1–2</td>
+          <td style="text-align: right; font-weight: 700;">323.0</td>
+          <td>Offensive slump needs immediate correction</td>
+        </tr>
+        <tr>
+          <td class="col-rank">7</td>
+          <td class="col-team">09RandyOrton <span class="manager-name">(Brad)</span></td>
+          <td style="text-align: center;" class="col-rec">1–2</td>
+          <td style="text-align: right; font-weight: 700;">314.4</td>
+          <td>Offensive skill positions bailed out by D/ST</td>
+        </tr>
+        <tr>
+          <td class="col-rank">8</td>
+          <td class="col-team">Coach $howtime <span class="manager-name">(Samuel)</span></td>
+          <td style="text-align: center;" class="col-rec">1–2</td>
+          <td style="text-align: right; font-weight: 700;">299.0</td>
+          <td>Offense yet to clear 300 total points on season</td>
+        </tr>
+        <tr>
+          <td class="col-rank">9</td>
+          <td class="col-team">ACHANE Gang <span class="manager-name">(Freddy)</span></td>
+          <td style="text-align: center;" class="col-rec badge-0-3">0–3</td>
+          <td style="text-align: right; font-weight: 700;">285.8</td>
+          <td>Sub-110 points every week; needs waiver overhaul</td>
+        </tr>
+        <tr>
+          <td class="col-rank">10</td>
+          <td class="col-team">Michael's Magnificent Team <span class="manager-name">(Michael M)</span></td>
+          <td style="text-align: center;" class="col-rec badge-0-3">0–3</td>
+          <td style="text-align: right; font-weight: 700;">264.1</td>
+          <td>Dumpster fire floor; lowest PF in the league</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+</body>
+</html>
