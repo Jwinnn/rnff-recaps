@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>RNFF Week 9 Report</title>
+<style>
+  :root {
+    --bg-main: #0b0e14;
+    --card-bg: #151922;
+    --card-border: #262c3a;
+    --accent-red: #c8102e;
+    --accent-gold: #f59e0b;
+    --win-green: #10b981;
+    --loss-red: #ef4444;
+    --text-primary: #f3f4f6;
+    --text-secondary: #9ca3af;
+    --text-muted: #6b7280;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 12px 8px;
+    display: flex;
+    justify-content: center;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .container {
+    max-width: 860px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  /* Header Card */
+  .header-card {
+    background: linear-gradient(135deg, #1f2430 0%, #11141c 100%);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 5px;
+    height: 100%;
+    background-color: var(--accent-gold);
+  }
+
+  .league-tag {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent-gold);
+    margin-bottom: 4px;
+  }
+
+  h1 {
+    font-size: 1.35rem;
+    font-weight: 800;
+    margin: 0 0 10px 0;
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+  }
+
+  /* Weekly Art Showcase */
+  .art-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .recap-art {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+  }
+
+  .art-caption {
+    padding: 10px 14px;
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    border-top: 1px solid var(--card-border);
+    background: rgba(255, 255, 255, 0.01);
+  }
+
+  .hot-takes-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  @media (min-width: 600px) {
+    .hot-takes-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .hot-take-item {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--card-border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-size: 0.8rem;
+    line-height: 1.4;
+  }
+
+  .hot-take-label {
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 0.65rem;
+    letter-spacing: 0.05em;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .section-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 6px 0 0 0;
+  }
+
+  /* Weekly Awards */
+  .awards-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  @media (min-width: 600px) {
+    .awards-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .award-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .award-title {
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .award-recipient {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.3;
+  }
+
+  .award-desc {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+  }
+
+  /* Matchup Cards */
+  .matchup-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .scoreboard-stack {
+    display: flex;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.02);
+    border-bottom: 1px solid var(--card-border);
+  }
+
+  .team-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    gap: 10px;
+  }
+
+  .team-row.winner-row {
+    background: rgba(16, 185, 129, 0.04);
+    border-left: 4px solid var(--win-green);
+  }
+
+  .team-row.loser-row {
+    border-top: 1px solid rgba(255, 255, 255, 0.03);
+    border-left: 4px solid transparent;
+  }
+
+  .team-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .team-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .team-name {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.25;
+  }
+
+  .outcome-pill {
+    font-size: 0.6rem;
+    font-weight: 800;
+    padding: 1px 5px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .outcome-win {
+    background: rgba(16, 185, 129, 0.2);
+    color: var(--win-green);
+  }
+
+  .outcome-loss {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--loss-red);
+  }
+
+  .manager-name {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-top: 1px;
+  }
+
+  .team-score {
+    font-size: 1.25rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    flex-shrink: 0;
+    text-align: right;
+  }
+
+  .team-row.winner-row .team-score { color: var(--win-green); }
+  .team-row.loser-row .team-score { color: var(--loss-red); }
+
+  .highlights-strip {
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.8rem;
+  }
+
+  .highlight-line {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    line-height: 1.35;
+  }
+
+  .badge-mvp, .badge-lvp, .badge-verdict {
+    font-size: 0.62rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    padding: 1px 5px;
+    border-radius: 3px;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+  }
+
+  .badge-mvp {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--win-green);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+  }
+
+  .badge-lvp {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--loss-red);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+  }
+
+  .badge-verdict {
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--accent-gold);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+  }
+
+  /* Lineup Efficiency */
+  .eff-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .eff-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    padding-bottom: 6px;
+  }
+
+  .eff-winner-tag {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--win-green);
+  }
+
+  .eff-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .eff-team-box {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--card-border);
+    border-radius: 6px;
+    padding: 8px 10px;
+  }
+
+  .eff-team-title {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .eff-scores {
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    margin-top: 2px;
+  }
+
+  .eff-rate {
+    font-size: 0.72rem;
+    font-weight: 800;
+    margin-top: 2px;
+  }
+
+  .eff-rate.opt-perfect { color: var(--win-green); }
+  .eff-rate.opt-sub { color: var(--accent-gold); }
+
+  .eff-swing-note {
+    font-size: 0.74rem;
+    line-height: 1.35;
+    padding: 6px 8px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  .eff-swing-note.swing-active {
+    border-left: 3px solid var(--accent-gold);
+    color: #fef08a;
+  }
+
+  .eff-swing-note.swing-none {
+    border-left: 3px solid var(--card-border);
+    color: var(--text-secondary);
+  }
+
+  /* Standings Table: Compact Mobile Fit */
+  .table-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    overflow-x: hidden;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.75rem;
+  }
+
+  th {
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text-secondary);
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 9px 8px;
+    border-bottom: 1px solid var(--card-border);
+  }
+
+  td {
+    padding: 8px 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    color: var(--text-secondary);
+  }
+
+  tr:last-child td { border-bottom: none; }
+
+  .col-rank {
+    width: 18px;
+    text-align: center;
+    color: var(--text-muted);
+    font-weight: 700;
+  }
+
+  .col-team {
+    font-weight: 600;
+    color: var(--text-primary);
+    max-width: 125px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .col-rec {
+    text-align: center;
+    font-weight: 700;
+    color: var(--text-primary);
+    width: 36px;
+  }
+
+  .col-pf {
+    text-align: right;
+    font-weight: 700;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
+    width: 52px;
+  }
+
+  .col-status {
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    padding-left: 8px;
+  }
+
+  /* Preview Card */
+  .preview-card {
+    background: linear-gradient(135deg, #161c28 0%, #11141c 100%);
+    border: 1px solid var(--card-border);
+    border-left: 4px solid var(--accent-gold);
+    border-radius: 8px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .preview-header {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  @media (min-width: 500px) {
+    .preview-header {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+
+  .odds-tag {
+    display: inline-block;
+    align-self: flex-start;
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--accent-gold);
+    background: rgba(245, 158, 11, 0.1);
+    padding: 2px 6px;
+    border-radius: 3px;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header & Micro-Hot Takes -->
+  <div class="header-card">
+    <div class="league-tag">RN Fantasy Football League &bull; Week 9</div>
+    <h1>The Week 9 Executive Summary</h1>
+    <div class="hot-takes-grid">
+      <div class="hot-take-item">
+        <span class="hot-take-label" style="color: var(--win-green);">The High Roller Heist</span>
+        <strong>PHANTOM drops 163.7.</strong> Michael D explodes behind Kenneth Walker III (34.3) and Matthew Golden (27.4) to match Trey at 7–2.
+      </div>
+      <div class="hot-take-item">
+        <span class="hot-take-label" style="color: var(--loss-red);">The Skid Continues</span>
+        <strong>Johnny drops 4 straight.</strong> Benching C.J. Stroud's 34.0 points sealed a 124.1–96.2 defeat to Julian, falling from 4–0 to 4–5.
+      </div>
+      <div class="hot-take-item">
+        <span class="hot-take-label" style="color: var(--accent-gold);">The Cinderella Run</span>
+        <strong>Michael M wins 3 in a row!</strong> Started 0–6, now 3–6 after taking down ACHANE Gang 112.4–106.2 behind Puka Nacua (28.0).
+      </div>
+    </div>
+  </div>
+
+  <!-- Weekly Art Card -->
+  <div class="art-card">
+    <img src="week-9-art.png" alt="RNFF Week 9 GTA Art" class="recap-art" onerror="this.style.display='none'">
+    <div class="art-caption">
+      🌴 <strong>Vice City Syndicate:</strong> The Week 9 narrative illustration.
+    </div>
+  </div>
+
+  <!-- Weekly Awards -->
+  <div class="section-title">🏆 Week 9 Badges of Distinction</div>
+  <div class="awards-grid">
+    <div class="award-card" style="border-top: 3px solid var(--loss-red);">
+      <span class="award-title" style="color: var(--loss-red);">👑 Clown Crown (Coach of the Week)</span>
+      <div class="award-recipient">TheLegendKiller (Brad)</div>
+      <div class="award-desc">
+        Started emergency QB Malik Willis for 0.7 points while leaving 25 combined points from Saquon Barkley and Denzel Boston on the bench.
+      </div>
+    </div>
+
+    <div class="award-card" style="border-top: 3px solid var(--accent-gold);">
+      <span class="award-title" style="color: var(--accent-gold);">🚨 Fraud Alert</span>
+      <div class="award-recipient">Coach $howtime (Samuel Fanta)</div>
+      <div class="award-desc">
+        Sputtered to 83.5 points in a loss to Heavy Metal. Has scored under 90 points in back-to-back weeks after being the league's top-scoring powerhouse.
+      </div>
+    </div>
+
+    <div class="award-card" style="border-top: 3px solid #60a5fa;">
+      <span class="award-title" style="color: #60a5fa;">🥛 Missing in Action (Milk Carton)</span>
+      <div class="award-recipient">Josh Jacobs (0.5 PTS)</div>
+      <div class="award-desc">
+        Left injured after getting completely bottled up against a brick-wall defense, leaving Johnny with virtually nothing in the RB2 slot.
+      </div>
+    </div>
+  </div>
+
+  <!-- Matchup Cards -->
+  <div class="section-title">⚡ Matchup Briefs</div>
+
+  <!-- Matchup 1 -->
+  <div class="matchup-card">
+    <div class="scoreboard-stack">
+      <div class="team-row winner-row">
+        <div class="team-info">
+          <div class="team-title-wrap">
+            <span class="team-name">Julian's Scary Team</span>
+            <span class="outcome-pill outcome-win">WIN</span>
+          </div>
+          <span class="manager-name">Julian</span>
+        </div>
+        <span class="team-score">124.1</span>
+      </div>
+      <div class="team-row loser-row">
+        <div class="team-info">
+          <div class="team-title-wrap">
+            <span class="team-name">Nguyener Nguyener Chkn Dinner</span>
+            <span class="outcome-pill outcome-loss">LOSS</span>
+          </div>
+          <span class="manager-name">Johnny</span>
+        </div>
+        <span class="team-score">96.2</span>
+      </div>
+    </div>
+    <div class="highlights-strip">
+      <div class="highlight-line">
+        <span class="badge-mvp">MVP</span>
+        <span><strong>Ja'Marr Chase (26.5) &amp; Christian Watson (26.6):</strong> Elite 53.1-point receiver duo tore secondaries apart.</span>
+      </div>
+      <div class="highlight-line">
+        <span class="badge-lvp">LVP</span>
+        <span><strong>Josh Jacobs (0.5) &amp; Zay Flowers (3.8):</strong> Sunk Johnny's starting lineup while C.J. Stroud's 34.0 cheered from the pine.</span>
+      </div>
+      <div class="highlight-line">
+        <span class="badge-verdict">Verdict</span>
+        <span>Julian snaps the logjam to climb to 5–4 (Rank 3); Johnny drops his fourth consecutive contest.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Matchup 2 -->
+  <div class="matchup-card">
+    <div class="scoreboard-stack">
+      <div class="team-row winner-row">
+        <div class="team-info">
+          <div class="team-title-wrap">
+            <span class="team-name">TREY_LECHE</span>
+            <span class="outcome-pill outcome-win">WIN</span>
+          </div>
+          <span class="manager-name">Trey</span>
+        </div>
+        <span class="team-score">118.0</span>
+      </div>
+      <div class="team-row loser-row">
+        <div class="team-info">
+          <div class="team-title-wrap">
+            <span class="team-name">TheLegendKiller</span>
+            <span class="outcome-pill outcome-loss">LOSS</span>
+          </div>
+          <span class="manager-name">Brad</span>
+        </div>
+        <span class="team-score">86.8</span>
+      </div>
+    </div>
+    <div class="highlights-strip">
+      <div class="highlight-line">
+        <span class="badge-mvp">MVP</span>
+        <span><strong>Bucky Irving (26.5) &amp; Brock Bowers (18.8):</strong> Carried Trey to a dominant 31.2-point blowout win.</span>
+      </div>
+      <div class="highlight-line">
+        <span class="badge-lvp">LVP</span>
+        <span><strong>Malik Willis (0.7) &amp; D'Andre Swift (3.1):</strong> Total quarterback collapse without Lamar Jackson available.</span>
+      </div>
+      <div class="highlight-line">
+        <span class="badge-verdict">Verdict</span>
+        <span>Trey retains the #1 overall seed at 7–2; Brad drops to 4–5.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Matchup 3 -->
+  <div class="matchup-card">
+    <div class="scoreboard-stack">
+      <div class="team-row winner-row">
+        <div class="team-info">
+          <div class="team-title-wrap">
+            <span class="team-name">Michael's Magnificent Team</span>
+            <span class="outcome-pill outcome-win">WIN</span>
+          </div>
+          <span class="manager-name">Michael M</span>
+        </div>
+        <span class="team-score">112.4</span>
+      </div>
+      <div class="team-row loser-row">
+        <div class="team-info">
+          <div class="team-title-wrap">
+            <span class="team-name">ACHANE Gang</span>
+            <span class="outcome-pill outcome-loss">LOSS</span>
+          </div>
+          <span class="manager-name">Freddy</span>
+        </div>
+        <span class="team-score">106.2</span>
+      </div>
+    </div>
+    <div class="highlights-strip">
+      <div class="highlight-line">
+        <span class="badge-mvp">MVP</span>
+        <span><strong>Puka Nacua (28.0) &amp; Chiefs D/ST (19.0):</strong> Sealed a 3rd straight victory for the league's hottest Cinderella squad.</span>
+      </div>
+      <div class="highlight-line">
+        <span class="badge-lvp">LVP</span>
+        <span><strong>Jared Goff (1.5):</strong> Benching Jayden Daniels proved costly despite monster games from CeeDee Lamb (28.5) and Javonte (20.4).</span>
+      </div>
+      <div class="highlight-line">
+        <span class="badge-verdict">Verdict</span>
+        <span>From 0–6 to 3–6, Michael M is completely alive; Freddy drops to 3–6 in heartbreak.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Matchup 4 -->
+  <div class="matchup-card">
+    <div class="scoreboard-stack">
+      <div class="team-row winner-row">
+        <div class="team-info">
+          <div class="team-title-wrap">
+            <span class="team-name">Heavy Metal</span>
+            <span class="outcome-pill outcome-win">WIN</span>
+          </div>
+          <span class="manager-name">Robert</span>
+        </div>
+        <span class="team-score">103.2</span>
+      </div>
+      <div class="team-row loser-row">
+        <div class="team-info">
+          <div class="team-title-wrap">
+            <span class="team-name">Coach $howtime</span>
+            <span class="outcome-pill outcome-loss">LOSS</span>
+          </div>
+          <span class="manager-name">Samuel</span>
+        </div>
+        <span class="team-score">83.5</span>
+      </div>
+    </div>
+    <div class="highlights-strip">
+      <div class="highlight-line">
+        <span class="badge-mvp">MVP</span>
+        <span><strong>Joe Burrow (26.7) &amp; Tee Higgins (17.7):</strong> Cincinnati connection once again delivered the winning margin.</span>
+      </div>
+      <div class="highlight-line">
+        <span class="badge-lvp">LVP</span>
+        <span><strong>Justin Jefferson (7.3) &amp; Kyren Williams (7.6):</strong> Star-studded offense failed to breach double digits across the board.</span>
+      </div>
+      <div class="highlight-line">
+        <span class="badge-verdict">Verdict</span>
+        <span>Robert claims Rank 4 at 5–4; Samuel drops to 4–5 on a painful two-game slide.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Matchup 5 -->
+  <div class="matchup-card">
+    <div class="scoreboard-stack">
+      <div class="team-row winner-row">
+        <div class="team-info">
+          <div class="team-title-wrap">
+            <span class="team-name">PHANTOMTHREE-PEAT</span>
+            <span class="outcome-pill outcome-win">WIN</span>
+          </div>
+          <span class="manager-name">Michael D</span>
+        </div>
+        <span class="team-score">163.7</span>
+      </div>
+      <div class="team-row loser-row">
+        <div class="team-info">
+          <div class="team-title-wrap">
+            <span class="team-name">Falcon Punch A$$A$$IN$</span>
+            <span class="outcome-pill outcome-loss">LOSS</span>
+          </div>
+          <span class="manager-name">Kam</span>
+        </div>
+        <span class="team-score">109.5</span>
+      </div>
+    </div>
+    <div class="highlights-strip">
+      <div class="highlight-line">
+        <span class="badge-mvp">MVP</span>
+        <span><strong>Kenneth Walker III (34.3) &amp; Matthew Golden (27.4):</strong> Season-high offensive clinic across the board.</span>
+      </div>
+      <div class="highlight-line">
+        <span class="badge-lvp">LVP</span>
+        <span><strong>Tough Luck:</strong> Jordan Love dropped 32.3 and Spencer Shrader hit 16.0, but nobody was surviving a 163.7-point tsunami.</span>
+      </div>
+      <div class="highlight-line">
+        <span class="badge-verdict">Verdict</span>
+        <span>Michael D keeps pace at 7–2; Kam falls to 3–6.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lineup Efficiency: Non-Scrolling Card Stack -->
+  <div class="section-title">📊 Lineup Efficiency &amp; Swings</div>
+  <div style="display: flex; flex-direction: column; gap: 8px;">
+
+    <!-- Matchup 1 Eff -->
+    <div class="eff-card">
+      <div class="eff-header">
+        <span style="font-weight: 700; font-size: 0.8rem;">Julian's Scary vs. Nguyener Nguyener</span>
+        <span class="eff-winner-tag">Julian Won</span>
+      </div>
+      <div class="eff-grid">
+        <div class="eff-team-box">
+          <div class="eff-team-title">Julian's Scary</div>
+          <div class="eff-scores">Actual: 124.1 | Opt: 124.5</div>
+          <div class="eff-rate opt-perfect">99.7% Efficiency</div>
+        </div>
+        <div class="eff-team-box">
+          <div class="eff-team-title">Nguyener Nguyener</div>
+          <div class="eff-scores">Actual: 96.2 | Opt: 112.3</div>
+          <div class="eff-rate opt-sub">85.7% Efficiency</div>
+        </div>
+      </div>
+      <div class="eff-swing-note swing-none">
+        ✓ <strong>NO SWING:</strong> Even starting C.J. Stroud (34.0) over Purdy (24.0) and Douglas (12.7) wouldn't top Julian's 124.1.
+      </div>
+    </div>
+
+    <!-- Matchup 2 Eff -->
+    <div class="eff-card">
+      <div class="eff-header">
+        <span style="font-weight: 700; font-size: 0.8rem;">TREY_LECHE vs. TheLegendKiller</span>
+        <span class="eff-winner-tag">TREY_LECHE Won</span>
+      </div>
+      <div class="eff-grid">
+        <div class="eff-team-box">
+          <div class="eff-team-title">TREY_LECHE</div>
+          <div class="eff-scores">Actual: 118.0 | Opt: 127.5</div>
+          <div class="eff-rate opt-perfect">92.5% Efficiency</div>
+        </div>
+        <div class="eff-team-box">
+          <div class="eff-team-title">TheLegendKiller</div>
+          <div class="eff-scores">Actual: 86.8 | Opt: 98.4</div>
+          <div class="eff-rate opt-sub">88.2% Efficiency</div>
+        </div>
+      </div>
+      <div class="eff-swing-note swing-none">
+        ✓ <strong>NO SWING:</strong> Trey's starting floor was insurmountable against Brad's quarterback deficit.
+      </div>
+    </div>
+
+    <!-- Matchup 3 Eff -->
+    <div class="eff-card">
+      <div class="eff-header">
+        <span style="font-weight: 700; font-size: 0.8rem;">Michael's Mag vs. ACHANE Gang</span>
+        <span class="eff-winner-tag">Michael's Mag Won</span>
+      </div>
+      <div class="eff-grid">
+        <div class="eff-team-box">
+          <div class="eff-team-title">Michael's Mag</div>
+          <div class="eff-scores">Actual: 112.4 | Opt: 113.1</div>
+          <div class="eff-rate opt-perfect">99.4% Efficiency</div>
+        </div>
+        <div class="eff-team-box">
+          <div class="eff-team-title">ACHANE Gang</div>
+          <div class="eff-scores">Actual: 106.2 | Opt: 114.3</div>
+          <div class="eff-rate opt-sub">92.9% Efficiency</div>
+        </div>
+      </div>
+      <div class="eff-swing-note swing-active">
+        ⚠️ <strong>SWING:</strong> Freddy starting Jayden Daniels (9.6) over Jared Goff (1.5) would have flipped the score to a 114.3–112.4 victory!
+      </div>
+    </div>
+
+    <!-- Matchup 4 Eff -->
+    <div class="eff-card">
+      <div class="eff-header">
+        <span style="font-weight: 700; font-size: 0.8rem;">Heavy Metal vs. Coach $howtime</span>
+        <span class="eff-winner-tag">Heavy Metal Won</span>
+      </div>
+      <div class="eff-grid">
+        <div class="eff-team-box">
+          <div class="eff-team-title">Heavy Metal</div>
+          <div class="eff-scores">Actual: 103.2 | Opt: 119.2</div>
+          <div class="eff-rate opt-sub">86.6% Efficiency</div>
+        </div>
+        <div class="eff-team-box">
+          <div class="eff-team-title">Coach $howtime</div>
+          <div class="eff-scores">Actual: 83.5 | Opt: 87.0</div>
+          <div class="eff-rate opt-perfect">96.0% Efficiency</div>
+        </div>
+      </div>
+      <div class="eff-swing-note swing-none">
+        ✓ <strong>NO SWING:</strong> Samuel's team lacked the offensive firepower to catch Heavy Metal's floor.
+      </div>
+    </div>
+
+    <!-- Matchup 5 Eff -->
+    <div class="eff-card">
+      <div class="eff-header">
+        <span style="font-weight: 700; font-size: 0.8rem;">PHANTOM vs. Falcon Punch</span>
+        <span class="eff-winner-tag">PHANTOM Won</span>
+      </div>
+      <div class="eff-grid">
+        <div class="eff-team-box">
+          <div class="eff-team-title">PHANTOM</div>
+          <div class="eff-scores">Actual: 163.7 | Opt: 163.7</div>
+          <div class="eff-rate opt-perfect">100.0% Efficiency</div>
+        </div>
+        <div class="eff-team-box">
+          <div class="eff-team-title">Falcon Punch</div>
+          <div class="eff-scores">Actual: 109.5 | Opt: 120.2</div>
+          <div class="eff-rate opt-sub">91.1% Efficiency</div>
+        </div>
+      </div>
+      <div class="eff-swing-note swing-none">
+        ✓ <strong>NO SWING:</strong> Michael D set a 100% optimal 163.7 masterclass—highest team score in weeks!
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Standings Table -->
+  <div class="section-title">Updated Standings (After Week 9)</div>
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th class="col-rank">#</th>
+          <th>Team &amp; Manager</th>
+          <th style="text-align: center;">Rec</th>
+          <th style="text-align: right;">PF</th>
+          <th class="col-status">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="col-rank">1</td>
+          <td class="col-team">TREY_LECHE<br><span style="font-size: 0.65rem; color: var(--text-muted);">Trey</span></td>
+          <td class="col-rec">7–2</td>
+          <td class="col-pf">1168.7</td>
+          <td class="col-status" style="color: var(--win-green);">#1 Seed / Points Leader</td>
+        </tr>
+        <tr>
+          <td class="col-rank">2</td>
+          <td class="col-team">PHANTOMTHREE-PEAT<br><span style="font-size: 0.65rem; color: var(--text-muted);">Michael D</span></td>
+          <td class="col-rec">7–2</td>
+          <td class="col-pf">1075.0</td>
+          <td class="col-status" style="color: var(--win-green);">Tied #1 / 163.7 Blast</td>
+        </tr>
+        <tr>
+          <td class="col-rank">3</td>
+          <td class="col-team">Julian's Scary Team<br><span style="font-size: 0.65rem; color: var(--text-muted);">Julian</span></td>
+          <td class="col-rec">5–4</td>
+          <td class="col-pf">998.0</td>
+          <td class="col-status">Leads 5–4 Tier</td>
+        </tr>
+        <tr>
+          <td class="col-rank">4</td>
+          <td class="col-team">Heavy Metal<br><span style="font-size: 0.65rem; color: var(--text-muted);">Robert</span></td>
+          <td class="col-rec">5–4</td>
+          <td class="col-pf">977.7</td>
+          <td class="col-status" style="color: var(--win-green);">Playoff Seed 4</td>
+        </tr>
+        <tr>
+          <td class="col-rank">5</td>
+          <td class="col-team">Nguyener Nguyener<br><span style="font-size: 0.65rem; color: var(--text-muted);">Johnny</span></td>
+          <td class="col-rec">4–5</td>
+          <td class="col-pf">1065.6</td>
+          <td class="col-status" style="color: var(--loss-red);">4-Game Skid / Bubble</td>
+        </tr>
+        <tr>
+          <td class="col-rank">6</td>
+          <td class="col-team">Coach $howtime<br><span style="font-size: 0.65rem; color: var(--text-muted);">Samuel</span></td>
+          <td class="col-rec">4–5</td>
+          <td class="col-pf">1001.6</td>
+          <td class="col-status">Playoff Bubble Cutoff</td>
+        </tr>
+        <tr>
+          <td class="col-rank">7</td>
+          <td class="col-team">TheLegendKiller<br><span style="font-size: 0.65rem; color: var(--text-muted);">Brad</span></td>
+          <td class="col-rec">4–5</td>
+          <td class="col-pf">936.7</td>
+          <td class="col-status">Needs QB Health</td>
+        </tr>
+        <tr>
+          <td class="col-rank">8</td>
+          <td class="col-team">ACHANE Gang<br><span style="font-size: 0.65rem; color: var(--text-muted);">Freddy</span></td>
+          <td class="col-rec">3–6</td>
+          <td class="col-pf">1014.5</td>
+          <td class="col-status">Tough Break</td>
+        </tr>
+        <tr>
+          <td class="col-rank">9</td>
+          <td class="col-team">Falcon Punch<br><span style="font-size: 0.65rem; color: var(--text-muted);">Kam</span></td>
+          <td class="col-rec">3–6</td>
+          <td class="col-pf">907.7</td>
+          <td class="col-status">Cellar Fight</td>
+        </tr>
+        <tr>
+          <td class="col-rank">10</td>
+          <td class="col-team">Michael's Mag<br><span style="font-size: 0.65rem; color: var(--text-muted);">Michael M</span></td>
+          <td class="col-rec">3–6</td>
+          <td class="col-pf">891.0</td>
+          <td class="col-status" style="color: var(--win-green);">3 Consecutive Wins!</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Week 10 Marquee Preview -->
+  <div class="section-title">🔮 Looking Ahead to Week 10</div>
+  <div class="preview-card">
+    <div class="preview-header">
+      <strong style="color: #fff; font-size: 0.88rem;">GAME OF THE WEEK: Nguyener Nguyener vs. Coach $howtime</strong>
+      <span class="odds-tag">SPREAD: Even &bull; O/U 202.5</span>
+    </div>
+    <div style="font-size: 0.78rem; color: var(--text-secondary); line-height: 1.4;">
+      An elimination-stakes clash on the playoff bubble. Johnny has dropped four straight matchups, while Samuel has dropped two in a row. The loser falls to 4–6 and likely out of the postseason bracket.
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
