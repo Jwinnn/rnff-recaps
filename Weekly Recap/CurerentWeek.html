@@ -3,19 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>RNFF Week 10 Report</title>
+<title>RNFF Week 11 Report — Rip &amp; Tear</title>
 <style>
   :root {
-    --bg-main: #0b0e14;
-    --card-bg: #151922;
-    --card-border: #262c3a;
-    --accent-red: #c8102e;
-    --accent-gold: #f59e0b;
-    --win-green: #10b981;
+    --bg-main: #09080a;
+    --card-bg: #141113;
+    --card-border: #2e1d20;
+    --accent-red: #dc2626;
+    --accent-lava: #f97316;
+    --accent-argent: #22c55e;
+    --win-green: #22c55e;
     --loss-red: #ef4444;
     --text-primary: #f3f4f6;
-    --text-secondary: #9ca3af;
-    --text-muted: #6b7280;
+    --text-secondary: #a1a1aa;
+    --text-muted: #71717a;
   }
 
   * { box-sizing: border-box; }
@@ -39,10 +40,10 @@
     gap: 14px;
   }
 
-  /* Header Card */
+  /* Header Card: DOOM Hellscape Styling */
   .header-card {
-    background: linear-gradient(135deg, #271316 0%, #11141c 100%);
-    border: 1px solid var(--card-border);
+    background: linear-gradient(135deg, #2b1012 0%, #120d0f 100%);
+    border: 1px solid #451a1d;
     border-radius: 10px;
     padding: 16px;
     position: relative;
@@ -56,24 +57,41 @@
     left: 0;
     width: 5px;
     height: 100%;
-    background-color: var(--accent-red);
+    background: linear-gradient(180deg, var(--accent-red) 0%, var(--accent-lava) 50%, var(--accent-argent) 100%);
   }
 
   .league-tag {
     font-size: 0.7rem;
-    font-weight: 700;
+    font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--accent-red);
+    color: var(--accent-lava);
     margin-bottom: 4px;
   }
 
   h1 {
     font-size: 1.35rem;
-    font-weight: 800;
+    font-weight: 900;
     margin: 0 0 10px 0;
     letter-spacing: -0.01em;
     line-height: 1.25;
+    text-transform: uppercase;
+  }
+
+  /* Playoff Race Banner */
+  .playoff-banner {
+    background: rgba(220, 38, 38, 0.12);
+    border: 1px solid rgba(220, 38, 38, 0.4);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+    font-size: 0.8rem;
+    line-height: 1.4;
+    color: #fecaca;
+  }
+
+  .playoff-banner strong {
+    color: #f97316;
   }
 
   /* Weekly Art Showcase */
@@ -133,7 +151,7 @@
 
   .section-title {
     font-size: 0.9rem;
-    font-weight: 700;
+    font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--text-secondary);
@@ -210,7 +228,7 @@
   }
 
   .team-row.winner-row {
-    background: rgba(16, 185, 129, 0.04);
+    background: rgba(34, 197, 94, 0.05);
     border-left: 4px solid var(--win-green);
   }
 
@@ -250,7 +268,7 @@
   }
 
   .outcome-win {
-    background: rgba(16, 185, 129, 0.2);
+    background: rgba(34, 197, 94, 0.2);
     color: var(--win-green);
   }
 
@@ -303,9 +321,9 @@
   }
 
   .badge-mvp {
-    background: rgba(16, 185, 129, 0.15);
+    background: rgba(34, 197, 94, 0.15);
     color: var(--win-green);
-    border: 1px solid rgba(16, 185, 129, 0.3);
+    border: 1px solid rgba(34, 197, 94, 0.3);
   }
 
   .badge-lvp {
@@ -315,9 +333,9 @@
   }
 
   .badge-verdict {
-    background: rgba(245, 158, 11, 0.15);
-    color: var(--accent-gold);
-    border: 1px solid rgba(245, 158, 11, 0.3);
+    background: rgba(249, 115, 22, 0.15);
+    color: var(--accent-lava);
+    border: 1px solid rgba(249, 115, 22, 0.3);
   }
 
   /* Lineup Efficiency */
@@ -380,7 +398,7 @@
   }
 
   .eff-rate.opt-perfect { color: var(--win-green); }
-  .eff-rate.opt-sub { color: var(--accent-gold); }
+  .eff-rate.opt-sub { color: var(--accent-lava); }
 
   .eff-swing-note {
     font-size: 0.74rem;
@@ -391,8 +409,8 @@
   }
 
   .eff-swing-note.swing-active {
-    border-left: 3px solid var(--accent-gold);
-    color: #fef08a;
+    border-left: 3px solid var(--accent-lava);
+    color: #fed7aa;
   }
 
   .eff-swing-note.swing-none {
@@ -433,6 +451,10 @@
   }
 
   tr:last-child td { border-bottom: none; }
+
+  tr.playoff-cutoff td {
+    border-bottom: 2px dashed var(--accent-red);
+  }
 
   .col-rank {
     width: 18px;
@@ -476,58 +498,61 @@
 
 <div class="container">
 
-  <!-- Header & Micro-Hot Takes -->
+  <!-- Header & Playoff Push Overview -->
   <div class="header-card">
-    <div class="league-tag">RN Fantasy Football League &bull; Week 10</div>
-    <h1>Dead Eye Showdown: Outlaws &amp; Underdogs</h1>
+    <div class="league-tag">RN Fantasy Football League &bull; Week 11</div>
+    <h1>Rip &amp; Tear: Hell on the Playoff Bubble</h1>
+    <div class="playoff-banner">
+      🔥 <strong>NIGHTMARE DIFFICULTY PLAYOFF RACE:</strong> Only <strong>two games separate 1st place (8–3) from 6th place (6–5)</strong>, with 7th-place ACHANE Gang (5–6) breathing right down their necks. Ranks 2 &amp; 3 are deadlocked at 7–4, while Ranks 4, 5, &amp; 6 are locked in a brutal three-way tie at 6–5 where total points decide who survives.
+    </div>
     <div class="hot-takes-grid">
       <div class="hot-take-item">
-        <span class="hot-take-label" style="color: var(--win-green);">The Gunslinger Returns</span>
-        <strong>Johnny erupted for 172.5.</strong> Snapped a four-game losing streak with the highest score of the season behind Jahmyr Gibbs (40.7) and Emmett Johnson (32.1).
+        <span class="hot-take-label" style="color: var(--win-green);">BFG-9000 Direct Hit</span>
+        <strong>Johnny obliterates PHANTOM.</strong> A 123.1–68.9 demolition vaults Nguyener Nguyener into the #4 playoff spot at 6–5 with the #2 PF in the league.
       </div>
       <div class="hot-take-item">
-        <span class="hot-take-label" style="color: var(--accent-gold);">High Noon Ambush</span>
-        <strong>Top two seeds fall.</strong> Both 7–2 juggernauts (TREY_LECHE and PHANTOMTHREE-PEAT) took losses in Week 10, tightening the playoff race.
+        <span class="hot-take-label" style="color: var(--accent-lava);">Ultra-Violence Survival</span>
+        <strong>Trey &amp; Julian win shorthanded.</strong> With JSN, Bowers, and Watson on bye, both top seeds survived to stay ahead of the 6–5 pack.
       </div>
       <div class="hot-take-item">
-        <span class="hot-take-label" style="color: var(--loss-red);">Saloon Collapse</span>
-        <strong>Michael M flatlines at 71.1.</strong> After three straight wins, Drake Maye's 1.1-point dud halted the Cinderella posse dead in its tracks.
+        <span class="hot-take-label" style="color: var(--loss-red);">Three-Way Bloodbath</span>
+        <strong>6–5 logjam at the cutline.</strong> Johnny (1361.2 PF), Samuel (1260.7 PF), and Robert (1192.1 PF) hold the final three spots—one slip drops them into the lava.
       </div>
     </div>
   </div>
 
   <!-- Weekly Art Card -->
   <div class="art-card">
-    <img src="week-10-art.png" alt="RNFF Week 10 Red Dead Redemption Art" class="recap-art" onerror="this.style.display='none'">
+    <img src="week-11-art.png" alt="RNFF Week 11 DOOM Art" class="recap-art" onerror="this.style.display='none'">
     <div class="art-caption">
-      🤠 <strong>Dead Eye Showdown:</strong> The Week 10 frontier illustration.
+      💀 <strong>Rip &amp; Tear:</strong> The Week 11 DOOM playoff push illustration.
     </div>
   </div>
 
   <!-- Weekly Awards -->
-  <div class="section-title">🏆 Week 10 Badges of Distinction</div>
+  <div class="section-title">🏆 Week 11 Badges of Distinction</div>
   <div class="awards-grid">
     <div class="award-card" style="border-top: 3px solid var(--loss-red);">
       <span class="award-title" style="color: var(--loss-red);">👑 Clown Crown (Coach of the Week)</span>
-      <div class="award-recipient">TREY_LECHE (Trey)</div>
+      <div class="award-recipient">Heavy Metal (Robert)</div>
       <div class="award-desc">
-        Started Bryce Young (5.1) while leaving Dak Prescott's 32.7-point shootout on the bench—costing him a 155.1–131.0 victory over Coach $howtime.
+        Stalled out at 88.7 points in a 123.0–88.7 rout against ACHANE Gang, letting Freddy close within one game of Robert's #6 final playoff spot.
       </div>
     </div>
 
-    <div class="award-card" style="border-top: 3px solid var(--accent-gold);">
-      <span class="award-title" style="color: var(--accent-gold);">🚨 Outlaw Ambush (Bad Beat)</span>
-      <div class="award-recipient">TheLegendKiller (Brad)</div>
+    <div class="award-card" style="border-top: 3px solid var(--accent-lava);">
+      <span class="award-title" style="color: var(--accent-lava);">🚨 Glory Kill (Blowout of the Week)</span>
+      <div class="award-recipient">Nguyener Nguyener (Johnny)</div>
       <div class="award-desc">
-        Christian McCaffrey (44.3) and Vikings D/ST (31.0) combined for 75.3 points, yet Brad still lost 161.2–129.3 to Julian's buzzsaw.
+        Hung 123.1 behind Jahmyr Gibbs (25.8) and Emmett Johnson (22.3) to hand #2 seed PHANTOMTHREE-PEAT a season-low 68.9-point massacre.
       </div>
     </div>
 
     <div class="award-card" style="border-top: 3px solid #60a5fa;">
       <span class="award-title" style="color: #60a5fa;">🥛 Missing in Action (Milk Carton)</span>
-      <div class="award-recipient">Drake Maye (1.1 PTS)</div>
+      <div class="award-recipient">Luther Burden III (2.3 PTS) &amp; Vikings D/ST (2.0 PTS)</div>
       <div class="award-desc">
-        Turned into a ghost while Trevor Lawrence's 25.7 points cheered from the bench in Michael M's 101.4-point blowout loss.
+        Both vanished in pivotal playoff-race matchups—Vikings D/ST's 2-point dud doomed Brad in a 9.4-point loss to Coach $howtime.
       </div>
     </div>
   </div>
@@ -546,31 +571,31 @@
           </div>
           <span class="manager-name">Johnny</span>
         </div>
-        <span class="team-score">172.5</span>
+        <span class="team-score">123.1</span>
       </div>
       <div class="team-row loser-row">
         <div class="team-info">
           <div class="team-title-wrap">
-            <span class="team-name">Michael's Magnificent Team</span>
+            <span class="team-name">PHANTOMTHREE-PEAT</span>
             <span class="outcome-pill outcome-loss">LOSS</span>
           </div>
-          <span class="manager-name">Michael M</span>
+          <span class="manager-name">Michael D</span>
         </div>
-        <span class="team-score">71.1</span>
+        <span class="team-score">68.9</span>
       </div>
     </div>
     <div class="highlights-strip">
       <div class="highlight-line">
         <span class="badge-mvp">MVP</span>
-        <span><strong>Jahmyr Gibbs (40.7) &amp; Emmett Johnson (32.1):</strong> 72.8-point rushing clinic obliterated the scoreboard.</span>
+        <span><strong>Jahmyr Gibbs (25.8) &amp; Emmett Johnson (22.3):</strong> Backfield duo piled up 48.1 points while C.J. Stroud added 18.7.</span>
       </div>
       <div class="highlight-line">
         <span class="badge-lvp">LVP</span>
-        <span><strong>Drake Maye (1.1):</strong> Tanked Michael M's three-game win streak with Trevor Lawrence (25.7) benched.</span>
+        <span><strong>Bye-Week Apocalypse:</strong> With Bijan Robinson, Kenneth Walker III, and Matthew Golden on bye, Josh Allen (9.0) couldn't save Michael D.</span>
       </div>
       <div class="highlight-line">
         <span class="badge-verdict">Verdict</span>
-        <span>Johnny climbs back to .500 at 5–5 with the league's #2 overall scoring total; Michael M drops back to 3–7.</span>
+        <span>Johnny jumps to 6–5 (#4 seed) with a massive points tiebreaker edge; PHANTOM drops to 7–4 (#3 seed).</span>
       </div>
     </div>
   </div>
@@ -581,12 +606,12 @@
       <div class="team-row winner-row">
         <div class="team-info">
           <div class="team-title-wrap">
-            <span class="team-name">Julian's Scary Team</span>
+            <span class="team-name">Coach $howtime</span>
             <span class="outcome-pill outcome-win">WIN</span>
           </div>
-          <span class="manager-name">Julian</span>
+          <span class="manager-name">Samuel</span>
         </div>
-        <span class="team-score">161.2</span>
+        <span class="team-score">128.1</span>
       </div>
       <div class="team-row loser-row">
         <div class="team-info">
@@ -596,21 +621,21 @@
           </div>
           <span class="manager-name">Brad</span>
         </div>
-        <span class="team-score">129.3</span>
+        <span class="team-score">118.7</span>
       </div>
     </div>
     <div class="highlights-strip">
       <div class="highlight-line">
         <span class="badge-mvp">MVP</span>
-        <span><strong>Ja'Marr Chase (28.6) &amp; Parker Washington (24.7):</strong> Backed by Colts D/ST (20.0) and Cam Little (19.0) for a 161.2 shootout win.</span>
+        <span><strong>Patrick Mahomes (23.0) &amp; George Pickens (20.3):</strong> Pickens' 100-yard Dallas surge plus 34 combined points from Broncos D/ST &amp; Tyler Bass sealed it.</span>
       </div>
       <div class="highlight-line">
         <span class="badge-lvp">LVP</span>
-        <span><strong>Audric Estime (1.6) &amp; Denzel Boston (2.1):</strong> Left CMC (44.3) and Vikings D/ST (31.0) without enough support.</span>
+        <span><strong>Vikings D/ST (2.0) &amp; Jaylen Warren (3.9):</strong> Wasted Jonah Coleman's 32.9-point explosion for Brad.</span>
       </div>
       <div class="highlight-line">
         <span class="badge-verdict">Verdict</span>
-        <span>Julian surges to 6–4 (Rank 3); Brad falls to 4–6 in one of the toughest high-scoring losses of the year.</span>
+        <span>Samuel climbs into the #5 playoff spot at 6–5; Brad falls to 4–7 and faces must-win territory down the stretch.</span>
       </div>
     </div>
   </div>
@@ -621,36 +646,36 @@
       <div class="team-row winner-row">
         <div class="team-info">
           <div class="team-title-wrap">
-            <span class="team-name">Coach $howtime</span>
+            <span class="team-name">TREY_LECHE</span>
             <span class="outcome-pill outcome-win">WIN</span>
           </div>
-          <span class="manager-name">Samuel</span>
+          <span class="manager-name">Trey</span>
         </div>
-        <span class="team-score">131.0</span>
+        <span class="team-score">124.0</span>
       </div>
       <div class="team-row loser-row">
         <div class="team-info">
           <div class="team-title-wrap">
-            <span class="team-name">TREY_LECHE</span>
+            <span class="team-name">Falcon Punch A$$A$$IN$</span>
             <span class="outcome-pill outcome-loss">LOSS</span>
           </div>
-          <span class="manager-name">Trey</span>
+          <span class="manager-name">Kam</span>
         </div>
-        <span class="team-score">127.5</span>
+        <span class="team-score">98.9</span>
       </div>
     </div>
     <div class="highlights-strip">
       <div class="highlight-line">
         <span class="badge-mvp">MVP</span>
-        <span><strong>George Pickens (38.0) &amp; Patrick Mahomes (33.5):</strong> 71.5-point aerial ambush took down the #1 seed.</span>
+        <span><strong>Dak Prescott (35.9) &amp; Chuba Hubbard (26.0):</strong> Dak's 4-TD dismantling of Tennessee carried Trey past JSN and Bowers bye weeks.</span>
       </div>
       <div class="highlight-line">
         <span class="badge-lvp">LVP</span>
-        <span><strong>Bryce Young (5.1):</strong> Started over Dak Prescott (32.7), wasting Chuba Hubbard (31.7) and JSN (27.1).</span>
+        <span><strong>Spencer Shrader (1.0) &amp; Bo Nix (10.5):</strong> Left Travis Kelce's 22.4 points stranded while Mike Evans (19.9) sat on the bench.</span>
       </div>
       <div class="highlight-line">
         <span class="badge-verdict">Verdict</span>
-        <span>Samuel halts his two-game slide to reach 5–5; Trey stays #1 at 7–3 but hands away a win at QB.</span>
+        <span>Trey reclaims sole possession of 1st place at 8–3 (1420.2 PF); Kam falls to 3–8.</span>
       </div>
     </div>
   </div>
@@ -661,36 +686,36 @@
       <div class="team-row winner-row">
         <div class="team-info">
           <div class="team-title-wrap">
-            <span class="team-name">Heavy Metal</span>
+            <span class="team-name">ACHANE Gang</span>
             <span class="outcome-pill outcome-win">WIN</span>
           </div>
-          <span class="manager-name">Robert</span>
+          <span class="manager-name">Freddy</span>
         </div>
-        <span class="team-score">125.7</span>
+        <span class="team-score">123.0</span>
       </div>
       <div class="team-row loser-row">
         <div class="team-info">
           <div class="team-title-wrap">
-            <span class="team-name">Falcon Punch A$$A$$IN$</span>
+            <span class="team-name">Heavy Metal</span>
             <span class="outcome-pill outcome-loss">LOSS</span>
           </div>
-          <span class="manager-name">Kam</span>
+          <span class="manager-name">Robert</span>
         </div>
-        <span class="team-score">90.5</span>
+        <span class="team-score">88.7</span>
       </div>
     </div>
     <div class="highlights-strip">
       <div class="highlight-line">
         <span class="badge-mvp">MVP</span>
-        <span><strong>Joe Burrow (31.8) &amp; Deebo Samuel Sr. (24.4):</strong> Anchored a balanced 35.2-point rout.</span>
+        <span><strong>CeeDee Lamb (24.7), Javonte Williams (22.6) &amp; Bears D/ST (23.0):</strong> Dallas stack plus Chicago's defense kept Freddy's playoff pulse alive.</span>
       </div>
       <div class="highlight-line">
         <span class="badge-lvp">LVP</span>
-        <span><strong>Chris Olave (4.5) &amp; Tyler Shough (6.5):</strong> Left Amon-Ra St. Brown's 23.8 stranded while Omarion Hampton (17.0) sat on the bench.</span>
+        <span><strong>Jonathan Taylor (4.7) &amp; Chase McLaughlin (3.0):</strong> Heavy Metal stalled out with Drake London on bye.</span>
       </div>
       <div class="highlight-line">
         <span class="badge-verdict">Verdict</span>
-        <span>Robert climbs to 6–4 (Rank 4); Kam falls to 3–7 in the cellar fight.</span>
+        <span>Freddy improves to 5–6 (Rank 7), sitting right behind 6–5 Heavy Metal (#6 seed) on the playoff bubble.</span>
       </div>
     </div>
   </div>
@@ -701,36 +726,36 @@
       <div class="team-row winner-row">
         <div class="team-info">
           <div class="team-title-wrap">
-            <span class="team-name">ACHANE Gang</span>
+            <span class="team-name">Julian's Scary Team</span>
             <span class="outcome-pill outcome-win">WIN</span>
           </div>
-          <span class="manager-name">Freddy</span>
+          <span class="manager-name">Julian</span>
         </div>
-        <span class="team-score">109.7</span>
+        <span class="team-score">117.3</span>
       </div>
       <div class="team-row loser-row">
         <div class="team-info">
           <div class="team-title-wrap">
-            <span class="team-name">PHANTOMTHREE-PEAT</span>
+            <span class="team-name">Michael's Magnificent Team</span>
             <span class="outcome-pill outcome-loss">LOSS</span>
           </div>
-          <span class="manager-name">Michael D</span>
+          <span class="manager-name">Michael M</span>
         </div>
-        <span class="team-score">103.3</span>
+        <span class="team-score">105.3</span>
       </div>
     </div>
     <div class="highlights-strip">
       <div class="highlight-line">
         <span class="badge-mvp">MVP</span>
-        <span><strong>Rams D/ST (23.0) &amp; Bhayshul Tuten (18.8):</strong> Combined with Jayden Daniels (18.8) to upset the #2 seed.</span>
+        <span><strong>Derrick Henry (17.1), George Kittle (16.9) &amp; Jets D/ST (14.0):</strong> Balanced depth overcame Ja'Marr Chase's quiet 5.6-point outing.</span>
       </div>
       <div class="highlight-line">
         <span class="badge-lvp">LVP</span>
-        <span><strong>Omar Cooper Jr. (0.0) &amp; Corey Kiner (2.5):</strong> Wasted Isaiah Likely's 23.2-point eruption and Josh Allen's 20.5.</span>
+        <span><strong>Trevor Lawrence (9.7) &amp; Jalen Coker (6.7):</strong> Wasted Ashton Jeanty's 25.4-point breakout with Puka Nacua on bye.</span>
       </div>
       <div class="highlight-line">
         <span class="badge-verdict">Verdict</span>
-        <span>Freddy moves to 4–6 to stay in the playoff hunt; Michael D drops to 7–3.</span>
+        <span>Julian vaults to 7–4 and grabs the #2 seed via points tiebreaker over PHANTOM; Michael M slips to 3–8.</span>
       </div>
     </div>
   </div>
@@ -742,122 +767,122 @@
     <!-- Matchup 1 Eff -->
     <div class="eff-card">
       <div class="eff-header">
-        <span style="font-weight: 700; font-size: 0.8rem;">Nguyener Nguyener vs. Michael's Mag</span>
+        <span style="font-weight: 700; font-size: 0.8rem;">Nguyener Nguyener vs. PHANTOM</span>
         <span class="eff-winner-tag">Johnny Won</span>
       </div>
       <div class="eff-grid">
         <div class="eff-team-box">
           <div class="eff-team-title">Nguyener Nguyener</div>
-          <div class="eff-scores">Actual: 172.5 | Opt: 186.1</div>
-          <div class="eff-rate opt-perfect">92.7% Efficiency</div>
+          <div class="eff-scores">Actual: 123.1 | Opt: 125.4</div>
+          <div class="eff-rate opt-perfect">98.2% Efficiency</div>
         </div>
         <div class="eff-team-box">
-          <div class="eff-team-title">Michael's Mag</div>
-          <div class="eff-scores">Actual: 71.1 | Opt: 95.7</div>
-          <div class="eff-rate opt-sub">74.3% Efficiency</div>
+          <div class="eff-team-title">PHANTOMTHREE-PEAT</div>
+          <div class="eff-scores">Actual: 68.9 | Opt: 68.9</div>
+          <div class="eff-rate opt-perfect">100.0% Efficiency</div>
         </div>
       </div>
       <div class="eff-swing-note swing-none">
-        ✓ <strong>NO SWING:</strong> Johnny's 172.5 was completely untouchable; starting Lawrence (25.7) wouldn't have come close.
+        ✓ <strong>NO SWING:</strong> Michael D played at 100% optimal efficiency with zero active bench points available during bye-week hell.
       </div>
     </div>
 
     <!-- Matchup 2 Eff -->
     <div class="eff-card">
       <div class="eff-header">
-        <span style="font-weight: 700; font-size: 0.8rem;">Julian's Scary vs. TheLegendKiller</span>
-        <span class="eff-winner-tag">Julian Won</span>
+        <span style="font-weight: 700; font-size: 0.8rem;">Coach $howtime vs. TheLegendKiller</span>
+        <span class="eff-winner-tag">Samuel Won</span>
       </div>
       <div class="eff-grid">
         <div class="eff-team-box">
-          <div class="eff-team-title">Julian's Scary</div>
-          <div class="eff-scores">Actual: 161.2 | Opt: 178.8</div>
-          <div class="eff-rate opt-sub">90.2% Efficiency</div>
+          <div class="eff-team-title">Coach $howtime</div>
+          <div class="eff-scores">Actual: 128.1 | Opt: 128.1</div>
+          <div class="eff-rate opt-perfect">100.0% Efficiency</div>
         </div>
         <div class="eff-team-box">
           <div class="eff-team-title">TheLegendKiller</div>
-          <div class="eff-scores">Actual: 129.3 | Opt: 150.0</div>
-          <div class="eff-rate opt-sub">86.2% Efficiency</div>
+          <div class="eff-scores">Actual: 118.7 | Opt: 121.3</div>
+          <div class="eff-rate opt-perfect">97.9% Efficiency</div>
         </div>
       </div>
       <div class="eff-swing-note swing-none">
-        ✓ <strong>NO SWING:</strong> Both teams left points on the bench, but Julian's 161.2 ceiling easily held off Brad's optimal max.
+        ✓ <strong>NO SWING:</strong> Both managers maximized their rosters; Samuel's 100% optimal lineup held off Brad by 9.4 points.
       </div>
     </div>
 
     <!-- Matchup 3 Eff -->
     <div class="eff-card">
       <div class="eff-header">
-        <span style="font-weight: 700; font-size: 0.8rem;">Coach $howtime vs. TREY_LECHE</span>
-        <span class="eff-winner-tag">Samuel Won</span>
+        <span style="font-weight: 700; font-size: 0.8rem;">TREY_LECHE vs. Falcon Punch</span>
+        <span class="eff-winner-tag">Trey Won</span>
       </div>
       <div class="eff-grid">
         <div class="eff-team-box">
-          <div class="eff-team-title">Coach $howtime</div>
-          <div class="eff-scores">Actual: 131.0 | Opt: 136.2</div>
-          <div class="eff-rate opt-perfect">96.2% Efficiency</div>
+          <div class="eff-team-title">TREY_LECHE</div>
+          <div class="eff-scores">Actual: 124.0 | Opt: 136.7</div>
+          <div class="eff-rate opt-sub">90.7% Efficiency</div>
         </div>
         <div class="eff-team-box">
-          <div class="eff-team-title">TREY_LECHE</div>
-          <div class="eff-scores">Actual: 127.5 | Opt: 162.1</div>
-          <div class="eff-rate opt-sub">78.7% Efficiency</div>
+          <div class="eff-team-title">Falcon Punch</div>
+          <div class="eff-scores">Actual: 98.9 | Opt: 111.2</div>
+          <div class="eff-rate opt-sub">88.9% Efficiency</div>
         </div>
       </div>
-      <div class="eff-swing-note swing-active">
-        ⚠️ <strong>SWING:</strong> Starting Dak Prescott (32.7) over Bryce Young (5.1) would have flipped a 3.5-point loss into a 155.1–131.0 victory for Trey!
+      <div class="eff-swing-note swing-none">
+        ✓ <strong>NO SWING:</strong> Even starting Mike Evans (19.9) wouldn't have caught Trey's Dak Prescott + Chuba Hubbard stack.
       </div>
     </div>
 
     <!-- Matchup 4 Eff -->
     <div class="eff-card">
       <div class="eff-header">
-        <span style="font-weight: 700; font-size: 0.8rem;">Heavy Metal vs. Falcon Punch</span>
-        <span class="eff-winner-tag">Robert Won</span>
+        <span style="font-weight: 700; font-size: 0.8rem;">ACHANE Gang vs. Heavy Metal</span>
+        <span class="eff-winner-tag">Freddy Won</span>
       </div>
       <div class="eff-grid">
         <div class="eff-team-box">
-          <div class="eff-team-title">Heavy Metal</div>
-          <div class="eff-scores">Actual: 125.7 | Opt: 141.7</div>
-          <div class="eff-rate opt-sub">88.7% Efficiency</div>
+          <div class="eff-team-title">ACHANE Gang</div>
+          <div class="eff-scores">Actual: 123.0 | Opt: 142.9</div>
+          <div class="eff-rate opt-sub">86.1% Efficiency</div>
         </div>
         <div class="eff-team-box">
-          <div class="eff-team-title">Falcon Punch</div>
-          <div class="eff-scores">Actual: 90.5 | Opt: 103.5</div>
-          <div class="eff-rate opt-sub">87.4% Efficiency</div>
+          <div class="eff-team-title">Heavy Metal</div>
+          <div class="eff-scores">Actual: 88.7 | Opt: 88.7</div>
+          <div class="eff-rate opt-perfect">100.0% Efficiency</div>
         </div>
       </div>
       <div class="eff-swing-note swing-none">
-        ✓ <strong>NO SWING:</strong> Robert's Burrow + Deebo stack outpaced Kam's optimal ceiling by over 22 points.
+        ✓ <strong>NO SWING:</strong> Freddy left Jared Goff (19.2) and Ladd McConkey (18.2) on the bench and still won by 34.3 points.
       </div>
     </div>
 
     <!-- Matchup 5 Eff -->
     <div class="eff-card">
       <div class="eff-header">
-        <span style="font-weight: 700; font-size: 0.8rem;">ACHANE Gang vs. PHANTOM</span>
-        <span class="eff-winner-tag">Freddy Won</span>
+        <span style="font-weight: 700; font-size: 0.8rem;">Julian's Scary vs. Michael's Mag</span>
+        <span class="eff-winner-tag">Julian Won</span>
       </div>
       <div class="eff-grid">
         <div class="eff-team-box">
-          <div class="eff-team-title">ACHANE Gang</div>
-          <div class="eff-scores">Actual: 109.7 | Opt: 111.8</div>
-          <div class="eff-rate opt-perfect">98.1% Efficiency</div>
+          <div class="eff-team-title">Julian's Scary</div>
+          <div class="eff-scores">Actual: 117.3 | Opt: 120.2</div>
+          <div class="eff-rate opt-perfect">97.6% Efficiency</div>
         </div>
         <div class="eff-team-box">
-          <div class="eff-team-title">PHANTOM</div>
-          <div class="eff-scores">Actual: 103.3 | Opt: 103.3</div>
-          <div class="eff-rate opt-perfect">100.0% Efficiency</div>
+          <div class="eff-team-title">Michael's Mag</div>
+          <div class="eff-scores">Actual: 105.3 | Opt: 111.4</div>
+          <div class="eff-rate opt-sub">94.5% Efficiency</div>
         </div>
       </div>
       <div class="eff-swing-note swing-none">
-        ✓ <strong>NO SWING:</strong> Michael D played at 100% lineup efficiency, but Freddy's Rams D/ST carried the upset.
+        ✓ <strong>NO SWING:</strong> Starting Khalil Shakir (12.8) over Jalen Coker (6.7) would have brought Michael M within 5.9 points, still short.
       </div>
     </div>
 
   </div>
 
   <!-- Standings Table -->
-  <div class="section-title">Updated Standings (After Week 10)</div>
+  <div class="section-title">Updated Standings &amp; Playoff Cutline (After Week 11)</div>
   <div class="table-card">
     <table>
       <thead>
@@ -866,79 +891,79 @@
           <th>Team &amp; Manager</th>
           <th style="text-align: center;">Rec</th>
           <th style="text-align: right;">PF</th>
-          <th class="col-status">Status</th>
+          <th class="col-status">Playoff Picture</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td class="col-rank">1</td>
           <td class="col-team">TREY_LECHE<br><span style="font-size: 0.65rem; color: var(--text-muted);">Trey</span></td>
-          <td class="col-rec">7–3</td>
-          <td class="col-pf">1296.2</td>
-          <td class="col-status" style="color: var(--win-green);">#1 Seed / Points Leader</td>
+          <td class="col-rec">8–3</td>
+          <td class="col-pf">1420.2</td>
+          <td class="col-status" style="color: var(--win-green);">#1 Seed / 1-Game Lead</td>
         </tr>
         <tr>
           <td class="col-rank">2</td>
-          <td class="col-team">PHANTOMTHREE-PEAT<br><span style="font-size: 0.65rem; color: var(--text-muted);">Michael D</span></td>
-          <td class="col-rec">7–3</td>
-          <td class="col-pf">1178.3</td>
-          <td class="col-status">Tied #1 Seed</td>
+          <td class="col-team">Julian's Scary Team<br><span style="font-size: 0.65rem; color: var(--text-muted);">Julian</span></td>
+          <td class="col-rec">7–4</td>
+          <td class="col-pf">1276.5</td>
+          <td class="col-status" style="color: var(--win-green);">#2 Seed / Wins PF Tiebreak</td>
         </tr>
         <tr>
           <td class="col-rank">3</td>
-          <td class="col-team">Julian's Scary Team<br><span style="font-size: 0.65rem; color: var(--text-muted);">Julian</span></td>
-          <td class="col-rec">6–4</td>
-          <td class="col-pf">1159.2</td>
-          <td class="col-status" style="color: var(--win-green);">2 Straight Wins</td>
+          <td class="col-team">PHANTOMTHREE-PEAT<br><span style="font-size: 0.65rem; color: var(--text-muted);">Michael D</span></td>
+          <td class="col-rec">7–4</td>
+          <td class="col-pf">1247.2</td>
+          <td class="col-status">#3 Seed / Tied at 7–4</td>
         </tr>
         <tr>
           <td class="col-rank">4</td>
-          <td class="col-team">Heavy Metal<br><span style="font-size: 0.65rem; color: var(--text-muted);">Robert</span></td>
-          <td class="col-rec">6–4</td>
-          <td class="col-pf">1103.4</td>
-          <td class="col-status" style="color: var(--win-green);">Playoff Seed 4</td>
+          <td class="col-team">Nguyener Nguyener<br><span style="font-size: 0.65rem; color: var(--text-muted);">Johnny</span></td>
+          <td class="col-rec">6–5</td>
+          <td class="col-pf">1361.2</td>
+          <td class="col-status" style="color: var(--win-green);">#4 Seed / #2 Overall PF</td>
         </tr>
         <tr>
           <td class="col-rank">5</td>
-          <td class="col-team">Nguyener Nguyener<br><span style="font-size: 0.65rem; color: var(--text-muted);">Johnny</span></td>
-          <td class="col-rec">5–5</td>
-          <td class="col-pf">1238.1</td>
-          <td class="col-status" style="color: var(--win-green);">#2 Overall PF / Back to .500</td>
-        </tr>
-        <tr>
-          <td class="col-rank">6</td>
           <td class="col-team">Coach $howtime<br><span style="font-size: 0.65rem; color: var(--text-muted);">Samuel</span></td>
-          <td class="col-rec">5–5</td>
-          <td class="col-pf">1132.6</td>
-          <td class="col-status">Playoff Bubble Cutoff</td>
+          <td class="col-rec">6–5</td>
+          <td class="col-pf">1260.7</td>
+          <td class="col-status">#5 Seed / Tied at 6–5</td>
+        </tr>
+        <tr class="playoff-cutoff">
+          <td class="col-rank">6</td>
+          <td class="col-team">Heavy Metal<br><span style="font-size: 0.65rem; color: var(--text-muted);">Robert</span></td>
+          <td class="col-rec">6–5</td>
+          <td class="col-pf">1192.1</td>
+          <td class="col-status" style="color: var(--accent-lava);">#6 Final Playoff Spot</td>
         </tr>
         <tr>
           <td class="col-rank">7</td>
           <td class="col-team">ACHANE Gang<br><span style="font-size: 0.65rem; color: var(--text-muted);">Freddy</span></td>
-          <td class="col-rec">4–6</td>
-          <td class="col-pf">1124.2</td>
-          <td class="col-status">Upset #2 Seed</td>
+          <td class="col-rec">5–6</td>
+          <td class="col-pf">1247.2</td>
+          <td class="col-status" style="color: var(--accent-lava);">1 Game Out (PF Edge)</td>
         </tr>
         <tr>
           <td class="col-rank">8</td>
           <td class="col-team">TheLegendKiller<br><span style="font-size: 0.65rem; color: var(--text-muted);">Brad</span></td>
-          <td class="col-rec">4–6</td>
-          <td class="col-pf">1066.0</td>
-          <td class="col-status">Tough High-Scoring L</td>
+          <td class="col-rec">4–7</td>
+          <td class="col-pf">1184.7</td>
+          <td class="col-status">2 Games Out / Needs Help</td>
         </tr>
         <tr>
           <td class="col-rank">9</td>
           <td class="col-team">Falcon Punch<br><span style="font-size: 0.65rem; color: var(--text-muted);">Kam</span></td>
-          <td class="col-rec">3–7</td>
-          <td class="col-pf">998.2</td>
-          <td class="col-status">Cellar Fight</td>
+          <td class="col-rec">3–8</td>
+          <td class="col-pf">1097.1</td>
+          <td class="col-status" style="color: var(--loss-red);">On Life Support</td>
         </tr>
         <tr>
           <td class="col-rank">10</td>
           <td class="col-team">Michael's Mag<br><span style="font-size: 0.65rem; color: var(--text-muted);">Michael M</span></td>
-          <td class="col-rec">3–7</td>
-          <td class="col-pf">962.1</td>
-          <td class="col-status" style="color: var(--loss-red);">Streak Snapped (71.1)</td>
+          <td class="col-rec">3–8</td>
+          <td class="col-pf">1067.4</td>
+          <td class="col-status" style="color: var(--loss-red);">On Life Support</td>
         </tr>
       </tbody>
     </table>
